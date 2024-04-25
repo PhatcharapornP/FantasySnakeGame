@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30ee45243f0ec394b8237d2b2f4f4e11, type: 3}
+  m_Name: GameTweaks
+  m_EditorClassIdentifier: 
+  GridSize_X: 16
+  GridSize_Y: 16
+  ObstacleMinSize_X: 1
+  ObstacleMaxSize_X: 2
+  ObstacleMinSize_Y: 1
+  ObstacleMaxSize_Y: 2
+  MinUnitSpawnCount: 64
+  MaxUnitSpawnCount: 256
+  MinHeroSpawn: 10
+  MaxHeroSpawn: 21
+  MinMonsterSpawn: 10
+  MaxMonsterSpawn: 21
+  MinObstacleSpawn: 10
+  MaxObstacleSpawn: 21
+  MinHeroHealth: 10
+  MaxHeroHealth: 40
+  MinMonsterHealth: 10
+  MaxMonsterHealth: 50
+  MinHeroHealthPerMove: 1
+  MaxHeroHealthPerMove: 5
+  MinMonsterHealthPerMove: 1
+  MaxMonsterHealthPerMove: 5
