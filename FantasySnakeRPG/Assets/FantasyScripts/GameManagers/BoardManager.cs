@@ -100,7 +100,6 @@ public class BoardManager : MonoBehaviour
         
         //TODO: Spawn obstacle
         mostFreePosAttempPossible = maxUnitOnBoardAmount - unitOnBoardAmount;
-        Debug.Log($"On try to spawn obstacle mostFreePosAttempPossible: {mostFreePosAttempPossible} | maxUnitOnBoardAmount: {maxUnitOnBoardAmount} | unitOnBoardAmount: {unitOnBoardAmount}".InColor(new Color(1f, 0.63f, 0.82f)));
         while (spawnObstacle.Count < GameManager.Instance.Tweaks.obstaclePossibleSpawnAmount && tmpFindFreePosAttemp < mostFreePosAttempPossible)
         {
             
@@ -149,7 +148,6 @@ public class BoardManager : MonoBehaviour
         
         //TODO: Spawn hero
         mostFreePosAttempPossible = maxUnitOnBoardAmount - unitOnBoardAmount;
-        Debug.Log($"On try to spawn hero mostFreePosAttempPossible: {mostFreePosAttempPossible} | maxUnitOnBoardAmount: {maxUnitOnBoardAmount} | unitOnBoardAmount: {unitOnBoardAmount} | tmpFindFreePosAttemp: {tmpFindFreePosAttemp}".InColor(new Color(0.67f, 0.9f, 1f)));
         tmpFindFreePosAttemp = 0;
         
         while (spawnedHero.Count < GameManager.Instance.Tweaks.heroPossibleSpawnAmount && tmpFindFreePosAttemp < mostFreePosAttempPossible)
@@ -181,7 +179,6 @@ public class BoardManager : MonoBehaviour
         //TODO: Spawn monster
         mostFreePosAttempPossible = maxUnitOnBoardAmount - unitOnBoardAmount;
         tmpFindFreePosAttemp = 0;
-        Debug.Log($"On try to spawn monster mostFreePosAttempPossible: {mostFreePosAttempPossible} | maxUnitOnBoardAmount: {maxUnitOnBoardAmount} | unitOnBoardAmount: {unitOnBoardAmount} | tmpFindFreePosAttemp: {tmpFindFreePosAttemp}".InColor(new Color(0.84f, 1f, 0.76f)));
         while (spawnedMonster.Count < GameManager.Instance.Tweaks.monsterPossibleSpawnAmount && tmpFindFreePosAttemp < mostFreePosAttempPossible)
         {
             //Oh boi
