@@ -8,6 +8,7 @@ public class BoardManager : MonoBehaviour
     [SerializeField] private RectTransform bgParent;
     [SerializeField] private RectTransform unitParent;
     [SerializeField] private RectTransform groundParent;
+    [SerializeField] private RectTransform playerPieceParent;
     [SerializeField] private Vector3 positionOffset;
     [SerializeField] [Min(35)] private int pieceSize = 35;
     [SerializeField] private float spacing = 1f;
@@ -79,7 +80,7 @@ public class BoardManager : MonoBehaviour
         PresetBoardSpawnOnGameStart();
         foreach (var boardUnitPair in board)
         {
-            SetupUnitTransform(boardUnitPair.Value);
+            SetupUnitTransformOnScreen(boardUnitPair.Value);
         }
     }
 
@@ -257,19 +258,30 @@ public class BoardManager : MonoBehaviour
 
     }
 
+    public BaseBoardUnit GetBoardUnitFromPos(Vector2Int targetPos)
+    {
+        if (board.ContainsKey(targetPos))
+        {
+            return board[targetPos];
+        }
+
+        return null;
+    }
+
     #region SpawnFunctions
     private int SpawnFirstPartyLeader()
     {
         var partyLeader = GameManager.Instance.Pool.PickFromPool(Globals.PoolType.Hero);
 
-        if (partyLeader.transform.parent != unitParent)
-            partyLeader.transform.SetParent(unitParent);
+        if (partyLeader.transform.parent != playerPieceParent)
+            partyLeader.transform.SetParent(playerPieceParent);
 
         int playerColumn = (GameManager.Instance.Tweaks.Board_Column_Size / 2) - 1;
 
-        SetupUnityBoardPositionData(new Vector2Int(playerColumn,0),new Vector3(pieceSize * playerColumn,pieceSize * 0,0),partyLeader);
+        SetupUnitPositionData(new Vector2Int(playerColumn,0),partyLeader);
         partyLeader.OnUnitSpawnOnBoard();
-        Player.Instance.OnBoardCreation((Hero)partyLeader);
+        Player.Instance.SetPartyLeaderOnBoardCreation((Hero)partyLeader);
+        board.Add(partyLeader.BoardPosition, partyLeader);
         return playerColumn;
     }
 
@@ -279,7 +291,8 @@ public class BoardManager : MonoBehaviour
         if (ground.transform.parent != groundParent)
             ground.transform.SetParent(groundParent);
 
-        SetupUnityBoardPositionData(new Vector2Int(column,row),new Vector3(pieceSize * column,pieceSize * row,0),ground);
+        SetupUnitPositionData(new Vector2Int(column,row),ground);
+        board.Add(ground.BoardPosition, ground);
         ground.OnUnitSpawnOnBoard();
         spawnedGround.Add(ground);
     }
@@ -290,7 +303,8 @@ public class BoardManager : MonoBehaviour
         if (hero.transform.parent != groundParent)
             hero.transform.SetParent(groundParent);
 
-        SetupUnityBoardPositionData(new Vector2Int(column,row),new Vector3(pieceSize * column,pieceSize * row,0),hero);
+        SetupUnitPositionData(new Vector2Int(column,row),hero);
+        board.Add(hero.BoardPosition, hero);
         hero.OnUnitSpawnOnBoard();
         spawnedHero.Add((Hero)hero);
     }
@@ -301,7 +315,8 @@ public class BoardManager : MonoBehaviour
         if (monster.transform.parent != groundParent)
             monster.transform.SetParent(groundParent);
 
-        SetupUnityBoardPositionData(new Vector2Int(column,row),new Vector3(pieceSize * column,pieceSize * row,0),monster);
+        SetupUnitPositionData(new Vector2Int(column,row),monster);
+        board.Add(monster.BoardPosition, monster);
         monster.OnUnitSpawnOnBoard();
         spawnedMonster.Add((Monster)monster);
     }
@@ -314,7 +329,8 @@ public class BoardManager : MonoBehaviour
         if (obstacle.transform.parent != unitParent)
             obstacle.transform.SetParent(unitParent);
 
-        SetupUnityBoardPositionData(new Vector2Int(column,row),new Vector3(pieceSize * column,pieceSize * row,0),obstacle);
+        SetupUnitPositionData(new Vector2Int(column,row),obstacle);
+        board.Add(obstacle.BoardPosition, obstacle);
         obstacle.OnUnitSpawnOnBoard();
         spawnObstacle.Add(new ObstacleSpawnData()
         {
@@ -348,21 +364,50 @@ public class BoardManager : MonoBehaviour
         }
     }
 
-    public void SetupUnitTransform(BaseBoardUnit boardUnit)
+    public void SetupUnitTransformOnScreen(BaseBoardUnit boardUnit)
     {
         boardUnit.transform.localPosition = boardUnit.GameobjPosition;
         boardUnit.transform.localScale = boardUnit.GameobjScale;
     }
 
-    public void SetupUnityBoardPositionData(Vector2Int boardPos,Vector3 objPos, BaseBoardUnit unit)
+    public void SetupUnitPositionData(Vector2Int boardPos, BaseBoardUnit unit)
     {
         unit.BoardPosition = boardPos;
-        unit.GameobjPosition = objPos - positionOffset;
+        unit.GameobjPosition = new Vector3(pieceSize * unit.BoardPosition.x,pieceSize * unit.BoardPosition.y,0) - positionOffset;
         unit.GameobjScale = new Vector3(pieceSize - spacing, pieceSize, 1);
      //   Debug.Log($"add {unit.BoardPosition} to board".InColor(Color.red),unit);
-        board.Add(unit.BoardPosition, unit);
     }
 
+    public Vector3 GetGameObjPos(Vector2Int boardPos)
+    {
+        return new Vector3(pieceSize * boardPos.x,pieceSize * boardPos.y,0) - positionOffset;
+    }
+
+    public BaseBoardUnit TryUpdateUnitPosOnBoard(Vector2Int previousPos,Vector2Int pos,BaseBoardUnit unit)
+    {
+        board.TryGetValue(pos, out var onSpotUnit);
+        board.TryGetValue(previousPos, out var previousSpotUnit);
+        
+        //TODO: Need to update what is replace the previous spot...
+
+        if (onSpotUnit!= null)
+        {
+            if (onSpotUnit.UnitType is Globals.PoolType.Ground)
+            {
+                board[pos] = unit;
+                return null;
+            }
+            else
+            {
+                return onSpotUnit;
+            }
+        }
+        else
+        {
+         board.Add(pos,unit);
+         return null;
+        }
+    }
    
     #endregion
 

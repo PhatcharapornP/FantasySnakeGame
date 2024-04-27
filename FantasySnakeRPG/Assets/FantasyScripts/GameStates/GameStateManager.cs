@@ -11,7 +11,7 @@ public class GameStateManager : MonoBehaviour
     [SerializeField] private GameState gameState;
     [SerializeField] private BattleState battleState;
     [SerializeField] private GameOverState gameOverState;
-    private IState currentState;
+    public IState currentState { get; private set; }
     [SerializeField] private Behaviour debugCurrentState;
     public void Initialize()
     {

@@ -10,8 +10,8 @@ public class Hero : BaseCharacterUnit
     {
         base.OnRemoveUnitFromBoard();
 
-        if (this == Player.Instance.partyLeader)
-            Player.Instance.RemovePartyLeader();
+        if (this == Player.Instance.partyLeader || Player.Instance.IsInPlayerParty(this))
+            Player.Instance.RemoveHeroFromParty(this);
     }
 
     protected override void OnSpawnOnBoard()
