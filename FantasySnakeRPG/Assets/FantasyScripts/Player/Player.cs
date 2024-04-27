@@ -85,6 +85,13 @@ public class Player : MonoBehaviour
 
         targetPos.x += direction.x;
         targetPos.y += direction.y;
+
+        if (targetPos.x > GameManager.Instance.Tweaks.Board_Column_Size-1 ||
+            targetPos.y > GameManager.Instance.Tweaks.Board_Row_Size-1)
+            return;
+        
+        if (targetPos.x < 0 || targetPos.y < 0)
+            return;
         previousDirection = direction;
         partyLeader.MoveUnit(targetPos);
     }

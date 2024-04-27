@@ -92,7 +92,7 @@ public partial class @GameInputAsset: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""left"",
                     ""id"": ""7d841bdf-d6a0-4030-94dd-2612b3e85536"",
-                    ""path"": ""<Gamepad>/dpad/down"",
+                    ""path"": ""<Gamepad>/dpad/left"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
