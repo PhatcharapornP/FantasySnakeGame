@@ -12,20 +12,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30ee45243f0ec394b8237d2b2f4f4e11, type: 3}
   m_Name: GameTweaks
   m_EditorClassIdentifier: 
-  GridSize_X: 16
-  GridSize_Y: 16
+  Board_Row_Size: 16
+  Board_Column_Size: 16
+  WeightForGroud: 10
+  WeightForHero: 2
+  WeightForMonster: 2
+  WeightForObstacle: 1
   ObstacleMinSize_X: 1
   ObstacleMaxSize_X: 2
   ObstacleMinSize_Y: 1
   ObstacleMaxSize_Y: 2
-  MinUnitSpawnCount: 64
-  MaxUnitSpawnCount: 256
-  MinHeroSpawn: 10
-  MaxHeroSpawn: 21
-  MinMonsterSpawn: 10
-  MaxMonsterSpawn: 21
-  MinObstacleSpawn: 10
-  MaxObstacleSpawn: 21
+  HeroSpawnPercent: 19.5
+  MonsterSpawnPercent: 8.3
+  ObstacleSpawnPercent: 15
   MinHeroHealth: 10
   MaxHeroHealth: 40
   MinMonsterHealth: 10
@@ -34,3 +33,6 @@ MonoBehaviour:
   MaxHeroHealthPerMove: 5
   MinMonsterHealthPerMove: 1
   MaxMonsterHealthPerMove: 5
+  heroPossibleSpawnAmount: 50
+  monsterPossibleSpawnAmount: 22
+  obstaclePossibleSpawnAmount: 39

@@ -4,18 +4,6 @@ using UnityEngine;
 
 public class BattleState : BaseState
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public override void Initialize()
     {
     }
@@ -28,5 +16,7 @@ public class BattleState : BaseState
     protected override void OnEndState()
     {
         GameManager.Instance.UI.Battle.OnHidePopup();
+        if (GameManager.Instance.UI.HudUI.IsPaused)
+            GameManager.Instance.UI.HudUI.UnpauseGame();
     }
 }

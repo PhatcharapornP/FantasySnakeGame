@@ -37,6 +37,7 @@ public class GameManager : MonoBehaviour
         {
             gameStateManager.GoToMainMenuState();
         });
+        tweaks.SetupSpawnPossibleAmount();
     }
 
     private void Initialize()

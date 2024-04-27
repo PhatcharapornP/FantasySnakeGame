@@ -10,11 +10,11 @@ public class BattleStateUI : BaseUserInterface
 
     protected override void OnTriggerShowPopup()
     {
-        GameManager.Instance.UI.Battle.OnShowPopup();
+        panel.gameObject.SetActive(true);
     }
 
     protected override void OnTriggerHidePopup()
     {
-        GameManager.Instance.UI.Battle.OnHidePopup();
+        panel.gameObject.SetActive(false);
     }
 }

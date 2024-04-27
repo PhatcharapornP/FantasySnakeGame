@@ -1,18 +1,27 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class Hero : MonoBehaviour
+public class Hero : BaseCharacterUnit
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] private Image heroStatusGraphic;
+    protected override void OnRemoveUnitFromBoard()
     {
-        
+        base.OnRemoveUnitFromBoard();
+
+        if (this == Player.Instance.partyLeader)
+            Player.Instance.RemovePartyLeader();
     }
 
-    // Update is called once per frame
-    void Update()
+    protected override void OnSpawnOnBoard()
     {
-        
+        base.OnSpawnOnBoard();
+        SetHeroStatusColor(Globals.DefaultHeroColor);
+    }
+    
+    public void SetHeroStatusColor(Color targetColor)
+    {
+        heroStatusGraphic.color = targetColor;
     }
 }

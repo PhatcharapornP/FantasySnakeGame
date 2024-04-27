@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class GameState : BaseState
 {
-    public int PartyCount { get; private set; }
-    [SerializeField] private List<Hero> playerParty = new List<Hero>();
+    
     public override void Initialize()
     {
     }
@@ -19,20 +18,10 @@ public class GameState : BaseState
     protected override void OnEndState()
     {
         GameManager.Instance.UI.Game.OnHidePopup();
+        if (GameManager.Instance.UI.HudUI.IsPaused)
+            GameManager.Instance.UI.HudUI.UnpauseGame();
+        GameManager.Instance.Board.Clearboard();
     }
 
-    public void RemoveHeroFromParty(Hero target)
-    {
-        playerParty.Remove(target);
-    }
-
-    public void SwitchSecondaryHeroToLeader()
-    {
-        
-    }
-
-    public void RotateLastHeroToLeader()
-    {
-        
-    }
+   
 }

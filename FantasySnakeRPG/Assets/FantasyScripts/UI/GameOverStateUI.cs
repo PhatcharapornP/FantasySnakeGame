@@ -11,17 +11,20 @@ public class GameOverStateUI : BaseUserInterface
     public override void Initialize()
     {
         replayBtn.onClick.AddListener(RestartGame);
-        quitBtn.onClick.AddListener(GameManager.Instance.QuitToDesktop);
+        quitBtn.onClick.AddListener(() =>
+        {
+            GameManager.Instance.StateManager.GoToMainMenuState();
+        });
     }
 
     protected override void OnTriggerShowPopup()
     {
-        GameManager.Instance.UI.GameOver.OnShowPopup();
+        panel.gameObject.SetActive(true);
     }
 
     protected override void OnTriggerHidePopup()
     {
-        GameManager.Instance.UI.GameOver.OnHidePopup();
+        panel.gameObject.SetActive(false);
     }
 
     private void RestartGame()
