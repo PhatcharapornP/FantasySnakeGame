@@ -8,6 +8,10 @@ public static class Globals
     public const string MoveCountKey = "Move";
     public const string MonsterDefeatedKey = "Mon_Defeated";
     
+    public const string HighScoreMsg = "Score";
+    public const string MoveMsg = "Moves";
+    public const string MonsterDefeatMsg = "Monster defeated";
+    
     public enum PoolType
     {
         BG = 0,

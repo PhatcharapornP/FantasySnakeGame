@@ -49,6 +49,7 @@ public class GameHudUI : BaseUserInterface
 
     private void GoToMainMenu()
     {
+        GameManager.Instance.UpdatePlayerStatAndSave();
         GameManager.Instance.StateManager.GoToMainMenuState();
     }
 }

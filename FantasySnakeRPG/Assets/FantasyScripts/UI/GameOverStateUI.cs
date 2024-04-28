@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class GameOverStateUI : BaseUserInterface
 {
+    [SerializeField] private TextMeshProUGUI monsterdefeatedTxt;
     [SerializeField] private Button replayBtn;
     [SerializeField] private Button quitBtn;
 
@@ -20,6 +22,7 @@ public class GameOverStateUI : BaseUserInterface
     protected override void OnTriggerShowPopup()
     {
         panel.gameObject.SetActive(true);
+        monsterdefeatedTxt.SetText($"{Globals.MonsterDefeatMsg}: {GameManager.Instance.MonsterCounter.GetCurrentMonsterAmount()}");
     }
 
     protected override void OnTriggerHidePopup()

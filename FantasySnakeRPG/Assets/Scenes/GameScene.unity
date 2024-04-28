@@ -154,8 +154,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bgParent: {fileID: 8688817483998193562}
   unitParent: {fileID: 8628632703501456979}
-  groundParent: {fileID: 8833772928300657059}
-  playerPieceParent: {fileID: 8833772928300657060}
+  playerUnitParent: {fileID: 8833772928300657060}
   positionOffset: {x: 0, y: 0, z: 0}
   pieceSize: 35
   spacing: 1
@@ -165,7 +164,6 @@ MonoBehaviour:
   spawnedMonster: []
   spawnObstacle: []
   spawnedBG: []
-  spawnedGround: []
   obstacleSpec: {x: 0, y: 0}
 --- !u!4 &118512558
 Transform:
@@ -265,7 +263,6 @@ MonoBehaviour:
   uiController: {fileID: 174394435}
   pool: {fileID: 1662035295}
   board: {fileID: 118512557}
-  currentScore: 0
 --- !u!4 &680011533
 Transform:
   m_ObjectHideFlags: 0
@@ -593,7 +590,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1169425030}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -833,7 +830,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   previousDirection: {x: 0, y: 0}
+  targetPos: {x: 0, y: 0}
   playerParty: []
+  rejectingInput: 0
 --- !u!4 &1928887540
 Transform:
   m_ObjectHideFlags: 0
@@ -1303,6 +1302,22 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5775972955332880009, guid: 98f597e0a69d35447bc55e189d7cc50f, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5775972955332880009, guid: 98f597e0a69d35447bc55e189d7cc50f, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8406177598259502444, guid: 98f597e0a69d35447bc55e189d7cc50f, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8406177598259502444, guid: 98f597e0a69d35447bc55e189d7cc50f, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1475,7 +1490,7 @@ SceneRoots:
   - {fileID: 749970989}
   - {fileID: 963194228}
   - {fileID: 1928887540}
+  - {fileID: 1169425033}
   - {fileID: 680011533}
   - {fileID: 1079866396}
   - {fileID: 1713471052}
-  - {fileID: 1169425033}

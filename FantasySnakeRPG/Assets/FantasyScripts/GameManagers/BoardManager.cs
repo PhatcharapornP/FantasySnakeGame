@@ -369,55 +369,50 @@ public class BoardManager : MonoBehaviour
     
     public void FillInRandomGroundWithNewHero()
     {
-        if (spawnedHero.Count+1 > GameManager.Instance.Tweaks.MaxHeroPossibleSpawnAmount)
+        if (spawnedHero.Count+GameManager.Instance.Tweaks.heroSpawnOnRemoveAmount > GameManager.Instance.Tweaks.MaxHeroPossibleSpawnAmount)
             return;
-            
-        int spawnHeroRNG = Random.Range(0, 2); // 1 in 2 chance
-        if (spawnHeroRNG == 0)
-        {
-            List<Vector2Int> freeSpotList = new List<Vector2Int>();
-            Vector2Int tmpPos = Vector2Int.zero;;
-            for (int c = 0; c < GameManager.Instance.Tweaks.Board_Column_Size; c++)
-            {
-                tmpPos.x = c;
-                for (int r = 0; r < GameManager.Instance.Tweaks.Board_Row_Size; r++)
-                {
-                    tmpPos.y = r;
-                    if (board.ContainsKey(tmpPos) == false)
-                        freeSpotList.Add(tmpPos);
-                }
-            }
 
-            int rngGround = Random.Range(0, freeSpotList.Count - 1);
-            var targetGroundPos = freeSpotList[rngGround];
-            SpawnHero(targetGroundPos.x,targetGroundPos.y);
+        List<Vector2Int> freeSpotList = new List<Vector2Int>();
+        Vector2Int tmpPos = Vector2Int.zero;
+        ;
+        for (int c = 0; c < GameManager.Instance.Tweaks.Board_Column_Size; c++)
+        {
+            tmpPos.x = c;
+            for (int r = 0; r < GameManager.Instance.Tweaks.Board_Row_Size; r++)
+            {
+                tmpPos.y = r;
+                if (board.ContainsKey(tmpPos) == false)
+                    freeSpotList.Add(tmpPos);
+            }
         }
+
+        int rngGround = Random.Range(0, freeSpotList.Count - 1);
+        var targetGroundPos = freeSpotList[rngGround];
+        for (int i = 0; i < GameManager.Instance.Tweaks.heroSpawnOnRemoveAmount; i++)
+            SpawnHero(targetGroundPos.x, targetGroundPos.y);
     }
     
     public void FillInRandomGroundWithNewMonster()
     {
-        if (spawnedMonster.Count+1 > GameManager.Instance.Tweaks.MaxMonsterPossibleSpawnAmount)
+        if (spawnedMonster.Count+GameManager.Instance.Tweaks.monsterSpawnOnRemoveAmount > GameManager.Instance.Tweaks.MaxMonsterPossibleSpawnAmount)
             return;
-        int spawnMonsterRNG = Random.Range(0, 2); // 1 in 2 chance
-        if (spawnMonsterRNG == 0)
+        List<Vector2Int> freeSpotList = new List<Vector2Int>();
+        Vector2Int tmpPos = Vector2Int.zero;
+        for (int c = 0; c < GameManager.Instance.Tweaks.Board_Column_Size; c++)
         {
-            List<Vector2Int> freeSpotList = new List<Vector2Int>();
-            Vector2Int tmpPos = Vector2Int.zero;;
-            for (int c = 0; c < GameManager.Instance.Tweaks.Board_Column_Size; c++)
+            tmpPos.x = c;
+            for (int r = 0; r < GameManager.Instance.Tweaks.Board_Row_Size; r++)
             {
-                tmpPos.x = c;
-                for (int r = 0; r < GameManager.Instance.Tweaks.Board_Row_Size; r++)
-                {
-                    tmpPos.y = r;
-                    if (board.ContainsKey(tmpPos) == false)
-                        freeSpotList.Add(tmpPos);
-                }
+                tmpPos.y = r;
+                if (board.ContainsKey(tmpPos) == false)
+                    freeSpotList.Add(tmpPos);
             }
-
-            int rngGround = Random.Range(0, freeSpotList.Count - 1);
-            var targetGroundPos = freeSpotList[rngGround];
-            SpawnMonster(targetGroundPos.x,targetGroundPos.y);
         }
+
+        int rngGround = Random.Range(0, freeSpotList.Count - 1);
+        var targetGroundPos = freeSpotList[rngGround];
+        for (int i = 0; i < GameManager.Instance.Tweaks.monsterSpawnOnRemoveAmount; i++)
+            SpawnMonster(targetGroundPos.x, targetGroundPos.y);
     }
 
     #endregion

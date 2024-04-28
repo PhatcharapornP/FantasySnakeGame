@@ -18,11 +18,11 @@ public class GameManager : MonoBehaviour
     public ObjectPoolManager Pool => pool;
     public BoardManager Board => board;
     public GameTweaks Tweaks => tweaks;
+    public CollisionController CollisionControl { get; private set; }
     public Movecounter MoveCounter { get; private set; }
     public MonsterDefeatedCounter MonsterCounter { get; private set; }
-    public CollisionController CollisionControl { get; private set; }
-
-    [SerializeField] private int currentScore = 0;
+    public PlayerScore PlayerScore { get; private set; }
+    
 
     private void Awake()
     {
@@ -53,6 +53,10 @@ public class GameManager : MonoBehaviour
         if (MonsterCounter == null)
             MonsterCounter = new MonsterDefeatedCounter();
         MonsterCounter.ResetMonsterAmount();
+
+        if (PlayerScore == null)
+            PlayerScore = new PlayerScore();
+        PlayerScore.ResetScore();
     }
     
     public void StartGame()
@@ -64,7 +68,7 @@ public class GameManager : MonoBehaviour
 
     public void QuitToDesktop()
     {
-        OverridePlayerStateAndSave();
+        UpdatePlayerStatAndSave();
 
 #if UNITY_EDITOR
         if (EditorApplication.isPlaying)
@@ -73,22 +77,12 @@ public class GameManager : MonoBehaviour
             Application.Quit();
 #endif
     }
-    
-    public void AddScore(int addOn)
-    {
-        currentScore += addOn;
-    }
-    
-    public void SetHighScore(int score)
-    {
-        currentScore = score;
-    }
 
-    private void OverridePlayerStateAndSave()
+    public void UpdatePlayerStatAndSave()
     {
         int scoreTmp = PlayerPrefs.GetInt(Globals.HighScoreKey);
-        if (scoreTmp < currentScore)
-            PlayerPrefs.SetInt(Globals.HighScoreKey,currentScore);
+        if (scoreTmp < PlayerScore.GetCurrentScore())
+            PlayerPrefs.SetInt(Globals.HighScoreKey, PlayerScore.GetCurrentScore());
         
         int moveTmp = PlayerPrefs.GetInt(Globals.MoveCountKey);
         if (moveTmp < MoveCounter.GetCurrentMoveAmount())

@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class MainMenuState : BaseState
 {
+    
     public override void Initialize()
     {
-        //TODO: Init UI
-        //TODO: Setup pool
+       
     }
 
     protected override void OnStartState()

@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public class Movecounter
 {
     private int move = 0;
@@ -5,6 +7,7 @@ public class Movecounter
     public void ResetMoveCounter()
     {
         move = 0;
+        
     }
     public void IncreaseMoveCounter()
     {
@@ -34,5 +37,25 @@ public class MonsterDefeatedCounter
     public int GetCurrentMonsterAmount()
     {
         return monsterDefected;
+    }
+}
+
+public class PlayerScore
+{
+    private int currentScore = 0;
+
+    public void ResetScore()
+    {
+        currentScore = 0;
+    }
+
+    public void AddScore(int amount)
+    {
+        currentScore += amount;
+    }
+
+    public int GetCurrentScore()
+    {
+        return currentScore;
     }
 }

@@ -14,25 +14,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Board_Row_Size: 16
   Board_Column_Size: 16
-  WeightForGroud: 10
-  WeightForHero: 2
-  WeightForMonster: 2
-  WeightForObstacle: 1
   ObstacleMinSize_X: 1
   ObstacleMaxSize_X: 2
   ObstacleMinSize_Y: 1
   ObstacleMaxSize_Y: 2
   HeroSpawnPercent: 19.5
-  MonsterSpawnPercent: 8.3
+  MonsterSpawnPercent: 13.4
   ObstacleSpawnPercent: 15
-  MinHeroHealth: 10
-  MaxHeroHealth: 40
-  MinMonsterHealth: 10
-  MaxMonsterHealth: 50
+  MinHeroHealth: 50
+  MaxHeroHealth: 100
+  MinHeroAttack: 20
+  MaxHeroAttack: 40
+  MinMonsterHealth: 50
+  MaxMonsterHealth: 100
+  MinMonsterAttack: 20
+  MaxMonsterAttack: 45
   MinHeroHealthPerMove: 1
   MaxHeroHealthPerMove: 5
   MinMonsterHealthPerMove: 1
   MaxMonsterHealthPerMove: 5
-  heroPossibleSpawnAmount: 50
-  monsterPossibleSpawnAmount: 22
-  obstaclePossibleSpawnAmount: 39
+  monsterDefeatScoreMultiplier: 1.3
+  monsterSpawnOnRemoveAmount: 1
+  heroSpawnOnRemoveAmount: 1
+  MinHeroPossibleSpawnAmount: 40
+  MinMonsterPossibleSpawnAmount: 28
+  MaxHeroPossibleSpawnAmount: 50
+  MaxMonsterPossibleSpawnAmount: 35
+  MaxObstaclePossibleSpawnAmount: 39

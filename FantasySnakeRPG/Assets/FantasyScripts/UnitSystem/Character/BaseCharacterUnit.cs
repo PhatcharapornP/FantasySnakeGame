@@ -10,6 +10,7 @@ public class BaseCharacterUnit : BaseBoardUnit,IMoveableUnit,ICharacter
     protected BaseBoardUnit contactedUnit;
     
     public int Health { get; set; }
+    public int MaxHealth { get; set; }
     public int Attack { get; set; }
     public bool IsAlive { get; set; }
 
@@ -33,30 +34,41 @@ public class BaseCharacterUnit : BaseBoardUnit,IMoveableUnit,ICharacter
     {
         gameObject.SetActive(false);
         IsAlive = false;
+    }
+
+    public void ReduceHealth(int amount)
+    {
+        Health -= amount;
+        OnHealthGotReduced();
+        IsAlive = Health > 0;
+        if (Health < 0)
+            Health = 0;
+        
+    }
+
+    protected virtual void OnHealthGotReduced()
+    {
         
     }
 
     protected virtual bool OnMoveUnit(Vector2Int targetPos)
     {
         if (!IsAlive) return false;
-        //TODO: Check on contact
         if (GameManager.Instance.CollisionControl.IsCollideWithOtherUnit(this, targetPos) == false)
         {
-            PreviousPos = BoardPosition;
-            SetupBoardPosData(targetPos);
-            SetupUnitTransformPos(GameManager.Instance.Board.GetGameObjPos(targetPos));
-            SetupUnitTrasnformOnScreen();
+            MoveUnitToTargetPos(targetPos);
             return true;
         }
-        else
-            return false;
-        
-        
-        
-        // contactedUnit = GameManager.Instance.Board.TryUpdateUnitPosOnBoard(PreviousPos,targetPos, this); 
-        // if (contactedUnit != null)
-        // {
-        //     OnSelfUnitContactWhileMoving(contactedUnit);
-        // }
+        return false;
+    }
+    
+    public void MoveUnitToTargetPos(Vector2Int targetPos)
+    {
+        PreviousPos = BoardPosition;
+        GameManager.Instance.Board.UpdateUnitPosOnBoard(targetPos,PreviousPos,this);
+        SetupBoardPosData(targetPos);
+        SetupUnitTransformPos(GameManager.Instance.Board.GetGameObjPos(targetPos));
+        SetupUnitTrasnformOnScreen();
+        CurrentPos = BoardPosition;
     }
 }

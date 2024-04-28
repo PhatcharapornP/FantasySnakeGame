@@ -192,11 +192,13 @@ public class Player : MonoBehaviour
         //TODO: Move the entire party
         partyLeader.CurrentDirection = direction;
         previousDirection = direction;
+        GameManager.Instance.MoveCounter.IncreaseMoveCounter();
+        GameManager.Instance.UI.Game.SetMoveText($"{Globals.MoveMsg}: {GameManager.Instance.MoveCounter.GetCurrentMoveAmount()}");
         if (partyLeader.MoveUnit(targetPos))
-            MovePlayerPartySnake(tmpPartyLeaderPreviousBoardPos);    
+            MovePlayerPartySnake(tmpPartyLeaderPreviousBoardPos);
     }
 
-    private void MovePlayerPartySnake(Vector2Int tmpPartyLeaderPreviousBoardPos,bool byPassColliding = false)
+    public void MovePlayerPartySnake(Vector2Int tmpPartyLeaderPreviousBoardPos,bool byPassColliding = false)
     {
         for (int i = 1; i < playerParty.Count; i++)
         {

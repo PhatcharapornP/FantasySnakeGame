@@ -7,6 +7,8 @@ using UnityEngine.UI;
 public class GameStateUI : BaseUserInterface
 {
     [SerializeField] private TextMeshProUGUI monsterDefeatedTxt;
+    [SerializeField] private TextMeshProUGUI moveTxt;
+    [SerializeField] private TextMeshProUGUI scoreTxt;
     
     public override void Initialize()
     {
@@ -26,5 +28,19 @@ public class GameStateUI : BaseUserInterface
         GameManager.Instance.UI.HudUI.OnHidePopup();
     }
 
-  
+    public void SetMonsterDefeatedText(string msg)
+    {
+        monsterDefeatedTxt.SetText(msg);
+    }
+
+    public void SetScoreText(string msg)
+    {
+        scoreTxt.SetText(msg);
+    }
+
+    public void SetMoveText(string msg)
+    {
+        moveTxt.SetText(msg);
+    }
+
 }

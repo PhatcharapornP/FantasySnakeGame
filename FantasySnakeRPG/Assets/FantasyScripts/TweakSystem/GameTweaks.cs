@@ -34,9 +34,13 @@ public class GameTweaks : ScriptableObject
     [Header("Hero Stats")]
     public int MinHeroHealth = 10;
     public int MaxHeroHealth = 40;
+    public int MinHeroAttack = 20;
+    public int MaxHeroAttack = 40;
     [Header("Monster Stats")]
     public int MinMonsterHealth = 10;
     public int MaxMonsterHealth = 50;
+    public int MinMonsterAttack = 20;
+    public int MaxMonsterAttack = 45;
 
     [Header("Hero Stat Growth")]
     public int MinHeroHealthPerMove = 1;
@@ -45,6 +49,17 @@ public class GameTweaks : ScriptableObject
     [Header("Monster Stat Growth")]
     public int MinMonsterHealthPerMove = 1;
     public int MaxMonsterHealthPerMove = 5;
+
+    [Header("Defeat score")]
+    [Range(1.1f,5)]
+    public float monsterDefeatScoreMultiplier = 1.5f;
+    
+    [Header("How many spawn when removed")] 
+    [Range(1, 5)]
+    public int monsterSpawnOnRemoveAmount = 1;
+    
+    [Range(1, 5)]
+    public int heroSpawnOnRemoveAmount = 1;
 
     [Header("Spawn amount")]
     public int MinHeroPossibleSpawnAmount;

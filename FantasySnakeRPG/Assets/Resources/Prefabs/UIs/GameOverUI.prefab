@@ -560,6 +560,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   panel: {fileID: 7968539963863276187}
+  monsterdefeatedTxt: {fileID: 3217274486621656662}
   replayBtn: {fileID: 1872029247375423420}
   quitBtn: {fileID: 5387613124061399729}
 --- !u!1 &7566062688474556929

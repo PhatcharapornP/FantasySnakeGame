@@ -10,6 +10,8 @@ public class GameStateManager : MonoBehaviour
     [SerializeField] private GameOverState gameOverState;
     public IState currentState { get; private set; }
     [SerializeField] private Behaviour debugCurrentState;
+    public BattleState Battle => battleState;
+    public GameState Game => gameState;
     public void Initialize()
     {
         mainMenuState.Initialize();
@@ -21,7 +23,13 @@ public class GameStateManager : MonoBehaviour
     public void GoToMainMenuState(UnityAction callback = null)
     {
         if (currentState is MainMenuState) return;
-        EndCurrentState();
+        if (currentState is BattleState)
+        {
+            currentState.EndState();
+            gameState.EndState();
+        }
+        else
+            EndCurrentState();    
         currentState = mainMenuState;
         currentState.StartState();
     }
@@ -38,18 +46,21 @@ public class GameStateManager : MonoBehaviour
     public void GoToBattleState(UnityAction callback = null)
     {
         if (GameManager.Instance.UI.HudUI.IsPaused) return;
-        if (currentState is GameState == false) return;
-        if (currentState is BattleState) return;
+        // if (currentState is GameState == false) return;
+        // if (currentState is BattleState) return;
         currentState = battleState;
         battleState.StartState();
     }
 
     public void OnBattleEnds()
     {
-        if (GameManager.Instance.UI.HudUI.IsPaused) return;
+        //if (GameManager.Instance.UI.HudUI.IsPaused) return;
+        Debug.Log($"OnBattleEnds {currentState}" .InColor(Color.red));
         if (currentState is BattleState == false) return;
+        
         battleState.EndState();
         currentState = gameState;
+        Debug.Log($"OnBattleEnds {currentState}".InColor(Color.green));
     }
 
     public void GoToGameOverState(UnityAction callback = null)

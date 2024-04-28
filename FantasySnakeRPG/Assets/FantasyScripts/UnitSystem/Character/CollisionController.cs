@@ -39,8 +39,8 @@ public class CollisionController
             case Globals.PoolType.Monster:
             {
                 //TODO: For debug
-                GameManager.Instance.Board.CompletelyRemoveFromBoard((BaseBoardUnit)target);
-                //GameManager.Instance.StateManager.GoToBattleState();
+                GameManager.Instance.StateManager.Battle.SetupBattleParticipant((Hero)target,(Monster)theOtherUnit);
+                
                 return false;
             }
             default: return false;

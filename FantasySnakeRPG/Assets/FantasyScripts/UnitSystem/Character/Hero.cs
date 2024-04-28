@@ -4,6 +4,7 @@ using UnityEngine.UI;
 public class Hero : BaseCharacterUnit
 {
     [SerializeField] private Image heroStatusGraphic;
+    
     public Hero nodeToFollow;
     public bool IsSwitchingPartyLeader = false;
     protected override void OnRemoveUnitFromBoard()
@@ -25,6 +26,10 @@ public class Hero : BaseCharacterUnit
     {
         base.OnSpawnOnBoard();
         SetHeroStatusColor(Globals.DefaultHeroColor);
+        
+        MaxHealth = Random.Range(GameManager.Instance.Tweaks.MinHeroHealth,GameManager.Instance.Tweaks.MaxHeroHealth + 1);
+        Health = MaxHealth;
+        Attack = Random.Range(GameManager.Instance.Tweaks.MinHeroAttack,GameManager.Instance.Tweaks.MaxHeroAttack + 1);
     }
     
     public void SetHeroStatusColor(Color targetColor)
@@ -32,24 +37,14 @@ public class Hero : BaseCharacterUnit
         heroStatusGraphic.color = targetColor;
     }
 
-    protected override bool OnMoveUnit(Vector2Int targetPos)
-    {
-        if (!IsAlive) return false;
-        if (GameManager.Instance.CollisionControl.IsCollideWithOtherUnit(this, targetPos) == false)
-        {
-            MoveUnitToTargetPos(targetPos);
-            return true;
-        }
-        return false;
-    }
+    private float tmpHealthPercent = 0;
 
-    public void MoveUnitToTargetPos(Vector2Int targetPos)
+    protected override void OnHealthGotReduced()
     {
-        PreviousPos = BoardPosition;
-        GameManager.Instance.Board.UpdateUnitPosOnBoard(targetPos,PreviousPos,this);
-        SetupBoardPosData(targetPos);
-        SetupUnitTransformPos(GameManager.Instance.Board.GetGameObjPos(targetPos));
-        SetupUnitTrasnformOnScreen();
-        CurrentPos = BoardPosition;
+        base.OnHealthGotReduced();
+        tmpHealthPercent = ((float)Health / (float)MaxHealth) * 100f;
+        Debug.Log($"hero: {this} tmpHealthPercent: {tmpHealthPercent} ".InColor(new Color(1f, 0.24f, 0.76f)),this);
+        heroStatusGraphic.fillAmount = tmpHealthPercent / 100f;
+        Debug.Log($"------------------------Health: {Health} / MaxHealth: {MaxHealth} > | heroStatusGraphic.fillAmount: {heroStatusGraphic.fillAmount}-------------------".InColor(new Color(1f, 0.24f, 0.76f)),this);
     }
 }

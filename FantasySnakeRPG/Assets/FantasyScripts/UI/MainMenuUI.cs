@@ -51,20 +51,23 @@ public class MainMenuUI : BaseUserInterface
 
     private void ResetHighScore()
     {
-        GameManager.Instance.SetHighScore(0);
-        highScoreTxt.SetText($"{HighScoreMsg} {PlayerPrefs.GetInt(Globals.HighScoreKey)}");
+        GameManager.Instance.PlayerScore.ResetScore();
+        PlayerPrefs.SetInt(Globals.HighScoreKey,0);
+        highScoreTxt.SetText($"{HighScoreMsg} {GameManager.Instance.PlayerScore.GetCurrentScore()}");
     }
 
     private void ResetMoveCount()
     {
         GameManager.Instance.MoveCounter.ResetMoveCounter();
-        moveCountTxt.SetText($"{MoveCountMsg} {PlayerPrefs.GetInt(Globals.HighScoreKey)}");
+        PlayerPrefs.SetInt(Globals.MoveCountKey,0);
+        moveCountTxt.SetText($"{MoveCountMsg} {GameManager.Instance.MoveCounter.GetCurrentMoveAmount()}");
     }
 
     private void ResetMonsterCount()
     {
         GameManager.Instance.MonsterCounter.ResetMonsterAmount();
-        monsterCountTxt.SetText($"{MonCountMsg} {PlayerPrefs.GetInt(Globals.HighScoreKey)}");
+        PlayerPrefs.SetInt(Globals.MonsterDefeatedKey,0);
+        monsterCountTxt.SetText($"{MonCountMsg} {GameManager.Instance.MonsterCounter.GetCurrentMonsterAmount()}");
     }
 
     private void QuitToDesktop()
