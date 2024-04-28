@@ -55,8 +55,8 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexShakeB.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\DropdownSample.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexColorCycler.cs" />
-    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\EnvMapAnimator.cs" />
     <Compile Include="Assets\InputSystem\GameInputAsset.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\EnvMapAnimator.cs" />
     <Compile Include="Assets\FantasyScripts\UI\GameStateUI.cs" />
     <Compile Include="Assets\FantasyScripts\Extentions\StringExtention.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextSelector_A.cs" />
@@ -111,6 +111,7 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark03.cs" />
     <Compile Include="Assets\FantasyScripts\UnitSystem\BaseBoardUnit.cs" />
     <Compile Include="Assets\FantasyScripts\GameStates\GameStateManager.cs" />
+    <Compile Include="Assets\FantasyScripts\UnitSystem\Character\CollisionController.cs" />
     <Compile Include="Assets\FantasyScripts\UI\MainMenuUI.cs" />
     <Compile Include="Assets\FantasyScripts\TimeSystem\Movecounter.cs" />
     <Compile Include="Assets\FantasyScripts\UnitSystem\Character\ICharacter.cs" />

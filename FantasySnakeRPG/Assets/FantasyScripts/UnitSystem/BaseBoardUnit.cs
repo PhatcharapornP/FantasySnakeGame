@@ -22,9 +22,7 @@ public abstract class BaseBoardUnit : MonoBehaviour,IBoardUnit
         gameObject.SetActive(false);
     }
 
-    protected virtual void OnPullFromPool()
-    {
-    }
+    protected virtual void OnPullFromPool() {}
 
     protected abstract void OnRemoveUnitFromBoard();
     
@@ -58,7 +56,6 @@ public abstract class BaseBoardUnit : MonoBehaviour,IBoardUnit
         BoardPosition = boardPos;
     }
 
-
     public void SetupUnitTransformPos(Vector3 targetPos)
     {
         GameobjPosition = targetPos;
@@ -76,5 +73,4 @@ public abstract class BaseBoardUnit : MonoBehaviour,IBoardUnit
         transform.localScale = GameobjScale;
 
     }
-
 }

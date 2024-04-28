@@ -27,6 +27,7 @@ public class PlayerInput : MonoBehaviour,GameInputAsset.IPlayerActions
         if (context.phase == InputActionPhase.Performed)
         {
             Debug.Log($"gimme switch hero".InColor(Color.magenta));   
+            Player.Instance.SwitchSecondaryHeroToPartyLeader();
         }
     }
 
@@ -35,6 +36,7 @@ public class PlayerInput : MonoBehaviour,GameInputAsset.IPlayerActions
         if (context.phase == InputActionPhase.Performed)
         {
          Debug.Log($"yoooooooo rotate pls".InColor(Color.cyan));
+         Player.Instance.RotateLastHeroToPartyLeader();
         }
     }
 

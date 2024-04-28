@@ -47,6 +47,14 @@ public class GameStateManager : MonoBehaviour
         battleState.StartState();
     }
 
+    public void OnBattleEnds()
+    {
+        if (GameManager.Instance.UI.HudUI.IsPaused) return;
+        if (currentState is BattleState == false) return;
+        battleState.EndState();
+        currentState = gameState;
+    }
+
     public void GoToGameOverState(UnityAction callback = null)
     {
         if (currentState is GameOverState) return;
@@ -63,6 +71,20 @@ public class GameStateManager : MonoBehaviour
             currentState.EndState();
     }
 
+    public void EndGameState()
+    {
+        if (gameState != null)
+            gameState.EndState();
+    }
+
+    public void ResetGame()
+    {
+        if (GameManager.Instance.UI.HudUI.IsPaused)
+            GameManager.Instance.UI.HudUI.UnpauseGame();
+        GameManager.Instance.Board.Clearboard();
+        Player.Instance.ResetAllParty();
+    }
+
     private void Update()
     {
         if (Input.GetKeyUp(KeyCode.F))
@@ -72,7 +94,7 @@ public class GameStateManager : MonoBehaviour
 
         if (Input.GetKeyUp(KeyCode.P))
         {
-            GoToGameState();
+            OnBattleEnds();
         }
 
         if (Input.GetKeyUp(KeyCode.L))

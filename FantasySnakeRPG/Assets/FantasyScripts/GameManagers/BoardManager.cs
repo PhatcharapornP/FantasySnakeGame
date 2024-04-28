@@ -7,27 +7,21 @@ public class BoardManager : MonoBehaviour
 {
     [SerializeField] private RectTransform bgParent;
     [SerializeField] private RectTransform unitParent;
-    [SerializeField] private RectTransform groundParent;
-    [SerializeField] private RectTransform playerPieceParent;
+    [SerializeField] private RectTransform playerUnitParent;
     [SerializeField] private Vector3 positionOffset;
     [SerializeField] [Min(35)] private int pieceSize = 35;
     [SerializeField] private float spacing = 1f;
     [SerializeField] private float widthDiff;
     [SerializeField] private float heightDiff;
-
-    private Dictionary<Vector2Int, BaseBoardUnit> board = new Dictionary<Vector2Int, BaseBoardUnit>();
-
     [SerializeField] private List<Hero> spawnedHero = new List<Hero>();
-
     [SerializeField] private List<Monster> spawnedMonster = new List<Monster>();
-
     [SerializeField] private List<ObstacleSpawnData> spawnObstacle = new List<ObstacleSpawnData>();
     [SerializeField] private List<BaseBoardUnit> spawnedBG = new List<BaseBoardUnit>();
-    [SerializeField] private List<BaseBoardUnit> spawnedGround = new List<BaseBoardUnit>();
     [SerializeField] private Vector2Int obstacleSpec;
-
     private List<KeyValuePair<Globals.PoolType, int>> SpawnWeightPairList = new List<KeyValuePair<Globals.PoolType, int>>();
-
+    private List<Vector2Int> playerFreePos = new List<Vector2Int>();
+    private Dictionary<Vector2Int, BaseBoardUnit> board = new Dictionary<Vector2Int, BaseBoardUnit>();
+    
     public void Clearboard()
     {
         foreach (var BG in spawnedBG)
@@ -35,11 +29,6 @@ public class BoardManager : MonoBehaviour
             BG.RemoveUnitFromBoard();
         }
         
-        foreach (var ground in spawnedGround)
-        {
-            ground.RemoveUnitFromBoard();
-        }
-
         foreach (var unit in spawnedHero)
         {
             unit.RemoveUnitFromBoard();
@@ -55,7 +44,6 @@ public class BoardManager : MonoBehaviour
             data.Unit.RemoveUnitFromBoard();
         }
         spawnedBG.Clear();
-        spawnedGround.Clear();
         spawnedHero.Clear();
         spawnedMonster.Clear();
         spawnObstacle.Clear();
@@ -78,19 +66,19 @@ public class BoardManager : MonoBehaviour
     public void SpawnBoardPiece()
     {
         PresetBoardSpawnOnGameStart();
-        foreach (var boardUnitPair in board)
-        {
-            SetupUnitTransformOnScreen(boardUnitPair.Value);
-        }
     }
 
+    
     public void PresetBoardSpawnOnGameStart()
     {
         int playerColumn = SpawnFirstPartyLeader();
         //TODO: Spawn ground around player --> give breathing space at the start of the game
-        SpawnGround(playerColumn+1,0);
-        SpawnGround(playerColumn-1,0);
-        SpawnGround(playerColumn,1);
+        playerFreePos.Add(new Vector2Int(playerColumn+1,0));
+        playerFreePos.Add(new Vector2Int(playerColumn+1,0));
+        playerFreePos.Add(new Vector2Int(playerColumn-1,0));
+        playerFreePos.Add(new Vector2Int(playerColumn,1));
+        playerFreePos.Add(new Vector2Int(playerColumn-1,1));
+        playerFreePos.Add(new Vector2Int(playerColumn+1,1));
 
         Vector2Int tmpRandomPos = new Vector2Int();
         bool isFreeBoardPos = false;
@@ -103,18 +91,15 @@ public class BoardManager : MonoBehaviour
         mostFreePosAttempPossible = maxUnitOnBoardAmount - unitOnBoardAmount;
         while (spawnObstacle.Count < GameManager.Instance.Tweaks.obstaclePossibleSpawnAmount && tmpFindFreePosAttemp < mostFreePosAttempPossible)
         {
-            
-            //Oh boi
             while (!isFreeBoardPos && tmpFindFreePosAttemp < mostFreePosAttempPossible)
             {
                 tmpRandomPos.x = Random.Range(0, GameManager.Instance.Tweaks.Board_Column_Size);
                 tmpRandomPos.y = Random.Range(0, GameManager.Instance.Tweaks.Board_Row_Size);
 
-                if (board.ContainsKey(tmpRandomPos) == false)
+                if (board.ContainsKey(tmpRandomPos) == false && playerFreePos.Contains(tmpRandomPos) == false)
                 {
                     isFreeBoardPos = true;
                     tmpFindFreePosAttemp = 0;
-                  
                 }
                 else
                     tmpFindFreePosAttemp++;
@@ -124,7 +109,7 @@ public class BoardManager : MonoBehaviour
             {
                 obstacleSpec = new Vector2Int(Random.Range(1, 3), Random.Range(1, 3));
                 //TODO: Check if obstacle is affoardable...
-                if (IsFreeForObstacleSpec(tmpRandomPos))
+                if (IsAbleToSpawnObstacleSpec(tmpRandomPos))
                 {
                     for (int x = 0; x < obstacleSpec.x; x++)
                     {
@@ -150,7 +135,6 @@ public class BoardManager : MonoBehaviour
         //TODO: Spawn hero
         mostFreePosAttempPossible = maxUnitOnBoardAmount - unitOnBoardAmount;
         tmpFindFreePosAttemp = 0;
-        
         while (spawnedHero.Count < GameManager.Instance.Tweaks.heroPossibleSpawnAmount && tmpFindFreePosAttemp < mostFreePosAttempPossible)
         {
             //Oh boi
@@ -159,7 +143,7 @@ public class BoardManager : MonoBehaviour
                 tmpRandomPos.x = Random.Range(0, GameManager.Instance.Tweaks.Board_Column_Size);
                 tmpRandomPos.y = Random.Range(0, GameManager.Instance.Tweaks.Board_Row_Size);
 
-                if (board.ContainsKey(tmpRandomPos) == false)
+                if (board.ContainsKey(tmpRandomPos) == false&& playerFreePos.Contains(tmpRandomPos) == false)
                 {
                     isFreeBoardPos = true;
                     tmpFindFreePosAttemp = 0;
@@ -188,7 +172,7 @@ public class BoardManager : MonoBehaviour
                 tmpRandomPos.x = Random.Range(0, GameManager.Instance.Tweaks.Board_Column_Size );
                 tmpRandomPos.y = Random.Range(0, GameManager.Instance.Tweaks.Board_Row_Size );
 
-                if (board.ContainsKey(tmpRandomPos) == false)
+                if (board.ContainsKey(tmpRandomPos) == false&& playerFreePos.Contains(tmpRandomPos) == false)
                 {
                     isFreeBoardPos = true;
                     tmpFindFreePosAttemp = 0;
@@ -205,22 +189,13 @@ public class BoardManager : MonoBehaviour
             }
             
         }
-        
-        //TODO: Fill free space with ground
-        for (int column = 0; column < GameManager.Instance.Tweaks.Board_Column_Size; column++)
-        for (int row = 0; row < GameManager.Instance.Tweaks.Board_Row_Size; row++)
-        {
-            if (board.ContainsKey(new Vector2Int(column, row))) continue;
-            SpawnGround(column,row);
-        }
     }
 
-    private bool IsFreeForObstacleSpec(Vector2Int targetPos)
+    private bool IsAbleToSpawnObstacleSpec(Vector2Int targetPos)
     {
         if (board.TryGetValue(new Vector2Int(targetPos.x, targetPos.y - 1), out var unitLeft) && unitLeft.UnitType is Globals.PoolType.Obstacle ||
             board.TryGetValue(new Vector2Int(targetPos.x - 1, targetPos.y), out var unitBelow) && unitBelow.UnitType is Globals.PoolType.Obstacle)
             return false;
-        
         
         Vector2Int tmpPos = targetPos;
         bool isAbleToAffordSpecX = false;
@@ -241,9 +216,7 @@ public class BoardManager : MonoBehaviour
         foreach (var pos in specPos)
         {
             if (board.ContainsKey(pos))
-            {
                 return false;
-            }
             else
             {
                 if (pos.x > GameManager.Instance.Tweaks.Board_Column_Size-1)
@@ -253,19 +226,7 @@ public class BoardManager : MonoBehaviour
                     return false;
             }
         }
-
         return true;
-
-    }
-
-    public BaseBoardUnit GetBoardUnitFromPos(Vector2Int targetPos)
-    {
-        if (board.ContainsKey(targetPos))
-        {
-            return board[targetPos];
-        }
-
-        return null;
     }
 
     #region SpawnFunctions
@@ -273,52 +234,43 @@ public class BoardManager : MonoBehaviour
     {
         var partyLeader = GameManager.Instance.Pool.PickFromPool(Globals.PoolType.Hero);
 
-        if (partyLeader.transform.parent != playerPieceParent)
-            partyLeader.transform.SetParent(playerPieceParent);
+        if (partyLeader.transform.parent != playerUnitParent)
+            partyLeader.transform.SetParent(playerUnitParent);
 
         int playerColumn = (GameManager.Instance.Tweaks.Board_Column_Size / 2) - 1;
 
         SetupUnitPositionData(new Vector2Int(playerColumn,0),partyLeader);
         partyLeader.OnUnitSpawnOnBoard();
-        Player.Instance.SetPartyLeaderOnBoardCreation((Hero)partyLeader);
+        Player.Instance.AddHeroToPlayerParty((Hero)partyLeader);
         board.Add(partyLeader.BoardPosition, partyLeader);
+        SetupUnitTransformOnScreen(partyLeader);
         return playerColumn;
-    }
-
-    private void SpawnGround(int column, int row)
-    {
-        var ground = GameManager.Instance.Pool.PickFromPool(Globals.PoolType.Ground);
-        if (ground.transform.parent != groundParent)
-            ground.transform.SetParent(groundParent);
-
-        SetupUnitPositionData(new Vector2Int(column,row),ground);
-        board.Add(ground.BoardPosition, ground);
-        ground.OnUnitSpawnOnBoard();
-        spawnedGround.Add(ground);
     }
     
     private void SpawnHero(int column, int row)
     {
         var hero = GameManager.Instance.Pool.PickFromPool(Globals.PoolType.Hero);
-        if (hero.transform.parent != groundParent)
-            hero.transform.SetParent(groundParent);
+        if (hero.transform.parent != playerUnitParent)
+            hero.transform.SetParent(playerUnitParent);
 
         SetupUnitPositionData(new Vector2Int(column,row),hero);
         board.Add(hero.BoardPosition, hero);
         hero.OnUnitSpawnOnBoard();
         spawnedHero.Add((Hero)hero);
+        SetupUnitTransformOnScreen(hero);
     }
     
     private void SpawnMonster(int column, int row)
     {
         var monster = GameManager.Instance.Pool.PickFromPool(Globals.PoolType.Monster);
-        if (monster.transform.parent != groundParent)
-            monster.transform.SetParent(groundParent);
+        if (monster.transform.parent != unitParent)
+            monster.transform.SetParent(unitParent);
 
         SetupUnitPositionData(new Vector2Int(column,row),monster);
         board.Add(monster.BoardPosition, monster);
         monster.OnUnitSpawnOnBoard();
         spawnedMonster.Add((Monster)monster);
+        SetupUnitTransformOnScreen(monster);
     }
 
     private void SpawnObstacle( int column, int row)
@@ -337,6 +289,7 @@ public class BoardManager : MonoBehaviour
             Spec = obstacleSpec,
             Unit = (Obstacle)obstacle
         });
+        SetupUnitTransformOnScreen(obstacle);
     }
     
     public void SpawnBackground()
@@ -375,7 +328,7 @@ public class BoardManager : MonoBehaviour
         unit.BoardPosition = boardPos;
         unit.GameobjPosition = new Vector3(pieceSize * unit.BoardPosition.x,pieceSize * unit.BoardPosition.y,0) - positionOffset;
         unit.GameobjScale = new Vector3(pieceSize - spacing, pieceSize, 1);
-     //   Debug.Log($"add {unit.BoardPosition} to board".InColor(Color.red),unit);
+     //  Debug.Log($"add {unit.BoardPosition} to board".InColor(new Color(1f, 0.96f, 0.84f)),unit);
     }
 
     public Vector3 GetGameObjPos(Vector2Int boardPos)
@@ -383,31 +336,108 @@ public class BoardManager : MonoBehaviour
         return new Vector3(pieceSize * boardPos.x,pieceSize * boardPos.y,0) - positionOffset;
     }
 
-    public BaseBoardUnit TryUpdateUnitPosOnBoard(Vector2Int previousPos,Vector2Int pos,BaseBoardUnit unit)
+    public void UpdateUnitPosOnBoard(Vector2Int pos,Vector2Int previousPos,BaseBoardUnit unit)
     {
-        board.TryGetValue(pos, out var onSpotUnit);
-        board.TryGetValue(previousPos, out var previousSpotUnit);
+        //CompletelyRemoveFromBoard(pos);
+        //board[pos] = unit;
+        board.Remove(previousPos);
         
-        //TODO: Need to update what is replace the previous spot...
+        if (board.TryGetValue(pos,out var tmp) && tmp!= null)
+            board[pos] = unit;
+        else
+            board.Add(pos,unit);
+    }
+    
+    public BaseBoardUnit GetBoardUnitFromPos(Vector2Int targetPos)
+    {
+        if (board.ContainsKey(targetPos))
+            return board[targetPos];
+        return null;
+    }
 
-        if (onSpotUnit!= null)
+    public void CompletelyRemoveFromBoard(BaseBoardUnit unit)
+    {
+        switch (unit.UnitType)
         {
-            if (onSpotUnit.UnitType is Globals.PoolType.Ground)
+            case Globals.PoolType.Hero:
+                Debug.Log($"try CompletelyRemoveFromBoard pos: {unit.BoardPosition} type: {unit.UnitType.ToString()}".InColor(new Color(1f, 0.69f, 0.15f)));
+                spawnedHero.Remove((Hero)unit);
+                break;
+            case Globals.PoolType.Monster:
+                spawnedMonster.Remove((Monster)unit);
+                break;
+            case Globals.PoolType.Obstacle:
             {
-                board[pos] = unit;
-                return null;
+                var tmp = spawnObstacle.Find(x => x.Unit == unit);
+                spawnObstacle.Remove(tmp);
             }
-            else
+                break;
+        }
+        
+        board.Remove(unit.BoardPosition);
+        unit.RemoveUnitFromBoard();
+    }
+
+    public void CompletelyRemoveFromBoard(Vector2Int pos)
+    {
+        if (board.TryGetValue(pos,out var unit) && unit != null)
+        {
+            
+            switch (unit.UnitType)
             {
-                return onSpotUnit;
+                case Globals.PoolType.Hero:
+                    Debug.Log($"try CompletelyRemoveFromBoard pos: {pos} type: {unit.UnitType.ToString()}".InColor(new Color(1f, 0.7f, 0.47f)));
+                    spawnedHero.Remove((Hero)unit);
+                    break;
+                case Globals.PoolType.Monster:
+                    spawnedMonster.Remove((Monster)unit);
+                    break;
+                case Globals.PoolType.Obstacle:
+                {
+                    var tmp = spawnObstacle.Find(x => x.Unit == unit);
+                    spawnObstacle.Remove(tmp);
+                }
+                    break;
             }
+            board.Remove(pos);
+            unit.RemoveUnitFromBoard();
+           
         }
         else
         {
-         board.Add(pos,unit);
-         return null;
+            Debug.Log($"CompletelyRemoveFromBoard couldn't find unit at {pos}".InColor(Color.red));
         }
     }
+
+    public void FillInRandomGroundWithNewHero()
+    {
+        int spawnHeroRNG = Random.Range(0, 2);
+        if (spawnHeroRNG > 0)
+        {
+            List<KeyValuePair<Vector2Int, BaseBoardUnit>> groundList = new List<KeyValuePair<Vector2Int, BaseBoardUnit>>();
+            foreach (var pair in board)
+            {
+                if (pair.Value.UnitType is Globals.PoolType.Ground)
+                {
+                    groundList.Add(pair);
+                }
+            }
+
+            int rngGround = Random.Range(0, groundList.Count - 1);
+            var targetGroundPos = groundList[rngGround].Key;
+            CompletelyRemoveFromBoard(targetGroundPos);
+            SpawnHero(targetGroundPos.x,targetGroundPos.y);
+
+            Debug.Log($"spawn new hero at: {targetGroundPos}".InColor(new Color(0.85f, 1f, 0.24f)),groundList[rngGround].Value);    
+        }
+        
+        Debug.Log($"not spawn anything".InColor(Color.red));
+    }
+
+    // public void FillGroundInBlankPos(Vector2Int pos)
+    // {
+    //     SpawnGround(pos.x,pos.y);
+    // }
    
     #endregion
 

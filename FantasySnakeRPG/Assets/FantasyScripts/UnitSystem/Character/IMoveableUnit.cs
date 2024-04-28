@@ -8,5 +8,5 @@ public interface IMoveableUnit
     Vector2Int PreviousPos { get; set; }
     Vector2Int CurrentDirection { get; set; }
 
-    void MoveUnit(Vector2Int targetPos);
+    bool MoveUnit(Vector2Int targetPos);
 }

@@ -1,8 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.TextCore.Text;
-
 public class Monster : BaseCharacterUnit
 {
+    protected override void OnRemoveUnitFromBoard()
+    {
+        gameObject.SetActive(false);
+        //TODO: Need to spawn monster on random spot
+    }
 }

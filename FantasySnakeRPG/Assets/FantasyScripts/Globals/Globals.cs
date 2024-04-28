@@ -17,7 +17,7 @@ public static class Globals
         Ground = 4
     }
     
-    public static Color IsPartyLeaderColor = new Color(1f, 0.42f, 0.06f);
-    public static Color IsInPartyColor = new Color(1f, 0.63f, 0.82f);
-    public static Color DefaultHeroColor = new Color(0.78f, 1f, 0.66f);
+    public static Color IsPartyLeaderColor = new Color(1f, 0.44f, 0.09f);
+    public static Color IsInPartyColor = new Color(0.85f, 1f, 0.47f);
+    public static Color DefaultHeroColor = new Color(0.41f, 0.64f, 1f);
 }

@@ -7,7 +7,7 @@ public class BaseCharacterUnit : BaseBoardUnit,IMoveableUnit,ICharacter
     public Vector2Int CurrentPos { get; set; }
     public Vector2Int PreviousPos { get; set; }
     public Vector2Int CurrentDirection { get; set; }
-    private BaseBoardUnit contactedUnit;
+    protected BaseBoardUnit contactedUnit;
     
     public int Health { get; set; }
     public int Attack { get; set; }
@@ -19,42 +19,44 @@ public class BaseCharacterUnit : BaseBoardUnit,IMoveableUnit,ICharacter
         IsAlive = true;
     }
 
-    public void MoveUnit(Vector2Int targetPos)
+    public bool MoveUnit(Vector2Int targetPos)
     {
-        OnMoveUnit(targetPos);
+        return OnMoveUnit(targetPos);
     }
 
     protected override void OnSelfUnitContactWhileMoving(IBoardUnit otherBoardUnit)
     {
-        switch (otherBoardUnit.UnitType)
-        {
-            case Globals.PoolType.Obstacle:
-            {
-                RemoveUnitFromBoard();
-            }
-                break;
-        }
-        
-        
+        GameManager.Instance.CollisionControl.IsCollisionAllowUnitToPass(this,otherBoardUnit);
     }
 
     protected override void OnRemoveUnitFromBoard()
     {
         gameObject.SetActive(false);
         IsAlive = false;
+        
     }
 
-    protected virtual void OnMoveUnit(Vector2Int targetPos)
+    protected virtual bool OnMoveUnit(Vector2Int targetPos)
     {
-        if (!IsAlive) return;
-        PreviousPos = BoardPosition;
-        SetupBoardPosData(targetPos);
-        SetupUnitTransformPos(GameManager.Instance.Board.GetGameObjPos(targetPos));
-        SetupUnitTrasnformOnScreen();
-        contactedUnit = GameManager.Instance.Board.TryUpdateUnitPosOnBoard(PreviousPos,targetPos, this); 
-        if (contactedUnit != null)
+        if (!IsAlive) return false;
+        //TODO: Check on contact
+        if (GameManager.Instance.CollisionControl.IsCollideWithOtherUnit(this, targetPos) == false)
         {
-            OnSelfUnitContactWhileMoving(contactedUnit);
+            PreviousPos = BoardPosition;
+            SetupBoardPosData(targetPos);
+            SetupUnitTransformPos(GameManager.Instance.Board.GetGameObjPos(targetPos));
+            SetupUnitTrasnformOnScreen();
+            return true;
         }
+        else
+            return false;
+        
+        
+        
+        // contactedUnit = GameManager.Instance.Board.TryUpdateUnitPosOnBoard(PreviousPos,targetPos, this); 
+        // if (contactedUnit != null)
+        // {
+        //     OnSelfUnitContactWhileMoving(contactedUnit);
+        // }
     }
 }
