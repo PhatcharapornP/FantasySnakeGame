@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -11,7 +8,7 @@ public class GameStateManager : MonoBehaviour
     [SerializeField] private GameState gameState;
     [SerializeField] private BattleState battleState;
     [SerializeField] private GameOverState gameOverState;
-    private IState currentState;
+    public IState currentState { get; private set; }
     [SerializeField] private Behaviour debugCurrentState;
     public void Initialize()
     {
@@ -47,12 +44,20 @@ public class GameStateManager : MonoBehaviour
         battleState.StartState();
     }
 
+    public void OnBattleEnds()
+    {
+        if (GameManager.Instance.UI.HudUI.IsPaused) return;
+        if (currentState is BattleState == false) return;
+        battleState.EndState();
+        currentState = gameState;
+    }
+
     public void GoToGameOverState(UnityAction callback = null)
     {
         if (currentState is GameOverState) return;
         EndCurrentState();
-        if (currentState is BattleState)
-            battleState.EndState();
+        // if (currentState is BattleState)
+        //     battleState.EndState();
         currentState = gameOverState;
         currentState.StartState();
     }
@@ -61,6 +66,19 @@ public class GameStateManager : MonoBehaviour
     {
         if (currentState != null)
             currentState.EndState();
+    }
+
+    public void EndGameState()
+    {
+        if (gameState != null)
+            gameState.EndState();
+    }
+
+    public void ResetGame()
+    {
+        if (GameManager.Instance.UI.HudUI.IsPaused)
+            GameManager.Instance.UI.HudUI.UnpauseGame();
+        Player.Instance.ResetAllParty();
     }
 
     private void Update()
@@ -72,13 +90,15 @@ public class GameStateManager : MonoBehaviour
 
         if (Input.GetKeyUp(KeyCode.P))
         {
-            GoToGameState();
+            OnBattleEnds();
         }
 
         if (Input.GetKeyUp(KeyCode.L))
         {
             if (Player.Instance && Player.Instance.HasPartyLeader)
-                Player.Instance.RemoveHeroFromParty(Player.Instance.partyLeader);
+            {
+                GameManager.Instance.Board.CompletelyRemoveFromBoard(Player.Instance.partyLeader);
+            }
         }
 
         debugCurrentState = (Behaviour)currentState;

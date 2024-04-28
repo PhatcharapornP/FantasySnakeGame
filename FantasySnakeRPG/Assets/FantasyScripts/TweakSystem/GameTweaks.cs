@@ -14,16 +14,6 @@ public class GameTweaks : ScriptableObject
     public int Board_Row_Size  = 16;
     [Range(8,16)]
     public int Board_Column_Size = 16;
-
-    [Header("Weight For Spawning")]
-    [Range(1, 10)]
-    public int WeightForGroud = 5;
-    [Range(1, 10)]
-    public int WeightForHero = 4;
-    [Range(1, 10)]
-    public int WeightForMonster = 4;
-    [Range(1, 10)]
-    public int WeightForObstacle = 3;
     
     [Header("Obstacle data")]
     public int ObstacleMinSize_X = 1;
@@ -56,39 +46,24 @@ public class GameTweaks : ScriptableObject
     public int MinMonsterHealthPerMove = 1;
     public int MaxMonsterHealthPerMove = 5;
 
-    [Header("Debug spawn amount")]
-    public int heroPossibleSpawnAmount;
-    public int monsterPossibleSpawnAmount;
-    public int obstaclePossibleSpawnAmount;
-
-    private List<KeyValuePair<Globals.PoolType, int>> poolTypeWeightPair = new List<KeyValuePair<Globals.PoolType, int>>();
-
-    public List<KeyValuePair<Globals.PoolType, int>>  GetSpawnWeightPairList()
-    {
-        if (poolTypeWeightPair.Count == 0)
-        {
-            poolTypeWeightPair = new List<KeyValuePair<Globals.PoolType, int>>();
-            
-            poolTypeWeightPair.Add(new KeyValuePair<Globals.PoolType, int>(Globals.PoolType.Ground,WeightForGroud));
-            poolTypeWeightPair.Add(new KeyValuePair<Globals.PoolType, int>(Globals.PoolType.Hero,WeightForHero));
-            poolTypeWeightPair.Add(new KeyValuePair<Globals.PoolType, int>(Globals.PoolType.Monster,WeightForMonster));
-            poolTypeWeightPair.Add(new KeyValuePair<Globals.PoolType, int>(Globals.PoolType.Obstacle,WeightForObstacle));
-            poolTypeWeightPair.Sort(delegate(KeyValuePair<Globals.PoolType, int>  firstPair, KeyValuePair<Globals.PoolType, int>  nextPair)
-                {
-                    return firstPair.Value.CompareTo(nextPair.Value);
-                }
-            );
-        }
-
-    
-        return poolTypeWeightPair;
-    }
+    [Header("Spawn amount")]
+    public int MinHeroPossibleSpawnAmount;
+    public int MinMonsterPossibleSpawnAmount;
+    public int MaxHeroPossibleSpawnAmount;
+    public int MaxMonsterPossibleSpawnAmount;
+    public int MaxObstaclePossibleSpawnAmount;
 
     public void SetupSpawnPossibleAmount()
     {
-        int boardSize = Board_Row_Size * Board_Column_Size;
-        obstaclePossibleSpawnAmount = Mathf.CeilToInt(ObstacleSpawnPercent / 100 * boardSize);
-        heroPossibleSpawnAmount = Mathf.CeilToInt(HeroSpawnPercent / 100 * boardSize);
-        monsterPossibleSpawnAmount = Mathf.CeilToInt(MonsterSpawnPercent / 100 * boardSize);
+        int fullBoardSize = Board_Row_Size * Board_Column_Size;
+        float limitBoardSpawn = 80f / 100f * fullBoardSize;
+        
+        
+        MinHeroPossibleSpawnAmount = Mathf.CeilToInt(HeroSpawnPercent / 100f * limitBoardSpawn);
+        MinMonsterPossibleSpawnAmount = Mathf.CeilToInt(MonsterSpawnPercent / 100f * limitBoardSpawn);
+        
+        MaxObstaclePossibleSpawnAmount = Mathf.CeilToInt(ObstacleSpawnPercent / 100f * fullBoardSize);
+        MaxHeroPossibleSpawnAmount = Mathf.CeilToInt(HeroSpawnPercent / 100f * fullBoardSize);
+        MaxMonsterPossibleSpawnAmount = Mathf.CeilToInt(MonsterSpawnPercent / 100f * fullBoardSize);
     }
 }

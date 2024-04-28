@@ -29,6 +29,7 @@ public class GameOverStateUI : BaseUserInterface
 
     private void RestartGame()
     {
+        GameManager.Instance.StateManager.EndGameState();
         GameManager.Instance.StateManager.GoToGameState();
     }
 }

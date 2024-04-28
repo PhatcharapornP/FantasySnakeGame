@@ -155,6 +155,7 @@ MonoBehaviour:
   bgParent: {fileID: 8688817483998193562}
   unitParent: {fileID: 8628632703501456979}
   groundParent: {fileID: 8833772928300657059}
+  playerPieceParent: {fileID: 8833772928300657060}
   positionOffset: {x: 0, y: 0, z: 0}
   pieceSize: 35
   spacing: 1
@@ -166,7 +167,6 @@ MonoBehaviour:
   spawnedBG: []
   spawnedGround: []
   obstacleSpec: {x: 0, y: 0}
-  spawningObstacle: 0
 --- !u!4 &118512558
 Transform:
   m_ObjectHideFlags: 0
@@ -512,6 +512,94 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ac567bea65febf24eaa31147c4055bd0, type: 3}
+--- !u!1 &1169425030
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1169425033}
+  - component: {fileID: 1169425032}
+  - component: {fileID: 1169425031}
+  m_Layer: 0
+  m_Name: PlayerInput
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1169425031
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1169425030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe8dbd26389e3544da2e1ceefc66a921, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveValue: {x: 0, y: 0}
+--- !u!114 &1169425032
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1169425030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Actions: {fileID: -944628639613478452, guid: 8ac37feedeb837243b87758efe564d78, type: 3}
+  m_NotificationBehavior: 2
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents:
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 2bc35ca1-9759-46d2-869c-6e45a6766feb
+    m_ActionName: Player/Move[/DualSenseGamepadHID/dpad/up,/DualSenseGamepadHID/dpad/down,/DualSenseGamepadHID/dpad/right,/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 82147315-c520-4804-8660-3961aba968b4
+    m_ActionName: Player/SwitchHero[/Keyboard/e,/DualSenseGamepadHID/leftShoulder]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 583cda69-9028-4322-b473-f787b16ae624
+    m_ActionName: Player/RotateHero[/Keyboard/q,/DualSenseGamepadHID/rightShoulder]
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: 
+  m_DefaultActionMap: Player
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
+--- !u!4 &1169425033
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1169425030}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!224 &1187231280 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6264979759392986452, guid: d8084cb0840fdd2449e58c9f2e72f817, type: 3}
@@ -744,6 +832,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67e53e997bb06414297744b5c6474d77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  previousDirection: {x: 0, y: 0}
   playerParty: []
 --- !u!4 &1928887540
 Transform:
@@ -1374,6 +1463,11 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 6139089132702146505, guid: 2f232c0d5e80e63479e2e2cd4f774472, type: 3}
   m_PrefabInstance: {fileID: 8833772928300657058}
   m_PrefabAsset: {fileID: 0}
+--- !u!224 &8833772928300657060 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 1045356377196326213, guid: 2f232c0d5e80e63479e2e2cd4f774472, type: 3}
+  m_PrefabInstance: {fileID: 8833772928300657058}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -1384,3 +1478,4 @@ SceneRoots:
   - {fileID: 680011533}
   - {fileID: 1079866396}
   - {fileID: 1713471052}
+  - {fileID: 1169425033}

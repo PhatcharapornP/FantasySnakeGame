@@ -18,9 +18,8 @@ public class GameState : BaseState
     protected override void OnEndState()
     {
         GameManager.Instance.UI.Game.OnHidePopup();
-        if (GameManager.Instance.UI.HudUI.IsPaused)
-            GameManager.Instance.UI.HudUI.UnpauseGame();
-        GameManager.Instance.Board.Clearboard();
+        GameManager.Instance.StateManager.ResetGame();
+
     }
 
    

@@ -4,7 +4,13 @@ using UnityEngine;
 
 public class Ground : BaseBoardUnit
 {
-    protected override void OnSelfUnitContact(IBoardUnit otherBoardUnit)
+    protected override void OnSelfUnitContactWhileMoving(IBoardUnit otherBoardUnit)
     {
+    }
+
+    protected override void OnRemoveUnitFromBoard()
+    {
+        gameObject.SetActive(false);
+        Debug.Log($"remove {GetType()} at: {BoardPosition}".InColor(Color.red),gameObject);
     }
 }

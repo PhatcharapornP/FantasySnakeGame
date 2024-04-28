@@ -20,12 +20,14 @@ public class GameManager : MonoBehaviour
     public GameTweaks Tweaks => tweaks;
     public Movecounter MoveCounter { get; private set; }
     public MonsterDefeatedCounter MonsterCounter { get; private set; }
+    public CollisionController CollisionControl { get; private set; }
 
     [SerializeField] private int currentScore = 0;
 
     private void Awake()
     {
         Instance = this;
+        CollisionControl = new CollisionController();
     }
 
     private void Start()

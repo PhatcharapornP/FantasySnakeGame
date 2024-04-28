@@ -9,8 +9,8 @@ public abstract class BaseBoardUnit : MonoBehaviour,IBoardUnit
     public Vector3 GameobjPosition { get; set; }
     public Vector3 GameobjScale { get; set; }
 
-    protected abstract void OnSelfUnitContact(IBoardUnit otherBoardUnit);
-
+    protected abstract void OnSelfUnitContactWhileMoving(IBoardUnit otherBoardUnit);
+    
     protected virtual void OnSpawnOnBoard()
     {
         gameObject.SetActive(true);
@@ -22,14 +22,9 @@ public abstract class BaseBoardUnit : MonoBehaviour,IBoardUnit
         gameObject.SetActive(false);
     }
 
-    protected virtual void OnPullFromPool()
-    {
-    }
+    protected virtual void OnPullFromPool() {}
 
-    protected virtual void OnRemoveUnitFromBoard()
-    {
-        gameObject.SetActive(false);
-    }
+    protected abstract void OnRemoveUnitFromBoard();
     
     public void RemoveUnitFromBoard()
     {
@@ -38,7 +33,7 @@ public abstract class BaseBoardUnit : MonoBehaviour,IBoardUnit
 
     public void OnUnitContact(IBoardUnit otherBoardUnit)
     {
-        OnSelfUnitContact(otherBoardUnit);
+        OnSelfUnitContactWhileMoving(otherBoardUnit);
     }
 
     public void OnUnitSpawnInPool(Globals.PoolType _type)
@@ -56,4 +51,25 @@ public abstract class BaseBoardUnit : MonoBehaviour,IBoardUnit
         OnSpawnOnBoard();
     }
 
+    public void SetupBoardPosData(Vector2Int boardPos)
+    {
+        BoardPosition = boardPos;
+    }
+
+    public void SetupUnitTransformPos(Vector3 targetPos)
+    {
+        GameobjPosition = targetPos;
+    }
+
+    public void SetupUnitScale(Vector3 gameObjScale)
+    {
+        GameobjScale = gameObjScale;
+    }
+
+    public void SetupUnitTrasnformOnScreen()
+    {
+       //TODO: set transform pos
+        transform.localPosition = GameobjPosition;
+        transform.localScale = GameobjScale;
+    }
 }
