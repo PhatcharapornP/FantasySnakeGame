@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -59,8 +56,8 @@ public class GameStateManager : MonoBehaviour
     {
         if (currentState is GameOverState) return;
         EndCurrentState();
-        if (currentState is BattleState)
-            battleState.EndState();
+        // if (currentState is BattleState)
+        //     battleState.EndState();
         currentState = gameOverState;
         currentState.StartState();
     }
@@ -81,7 +78,6 @@ public class GameStateManager : MonoBehaviour
     {
         if (GameManager.Instance.UI.HudUI.IsPaused)
             GameManager.Instance.UI.HudUI.UnpauseGame();
-        GameManager.Instance.Board.Clearboard();
         Player.Instance.ResetAllParty();
     }
 
@@ -100,7 +96,9 @@ public class GameStateManager : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.L))
         {
             if (Player.Instance && Player.Instance.HasPartyLeader)
-                Player.Instance.RemoveHeroFromParty(Player.Instance.partyLeader);
+            {
+                GameManager.Instance.Board.CompletelyRemoveFromBoard(Player.Instance.partyLeader);
+            }
         }
 
         debugCurrentState = (Behaviour)currentState;

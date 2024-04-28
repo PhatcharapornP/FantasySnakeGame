@@ -71,6 +71,5 @@ public abstract class BaseBoardUnit : MonoBehaviour,IBoardUnit
        //TODO: set transform pos
         transform.localPosition = GameobjPosition;
         transform.localScale = GameobjScale;
-
     }
 }

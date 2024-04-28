@@ -11,7 +11,6 @@ public class CollisionController
             case Globals.PoolType.Obstacle:
             {
                 Debug.Log($"------------>{target.BoardPosition} collide with obstacle at {theOtherUnit.BoardPosition}".InColor(Color.red));
-                //GameManager.Instance.Board.CompletelyRemoveFromBoard(target.BoardPosition);
                 GameManager.Instance.Board.CompletelyRemoveFromBoard((BaseBoardUnit)target);
                 return false;
             }
@@ -22,15 +21,8 @@ public class CollisionController
                     //TODO: Means that it'll allow partyleader to replace this unit pos
                     //TODO: And when partyleader moves. the party follows
                     Player.Instance.AddHeroToPlayerParty((Hero)theOtherUnit);
+                    GameManager.Instance.Board.FillInRandomGroundWithNewHero();
                     return true;
-                    
-                    
-                    
-                    
-                    
-                    //  GameManager.Instance.Board.TempRemoveFromBoard(theOtherUnit.BoardPosition);
-                    //GameManager.Instance.Board.FillInRandomGroundWithNewHero();
-                    //    GameManager.Instance.Board.FillGroundInBlankPos(theOtherUnit.BoardPosition);
                 }
                 else
                 {
