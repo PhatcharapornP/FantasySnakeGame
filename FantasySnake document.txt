@@ -1,0 +1,98 @@
+﻿Fantasy snake RPG game documentation 
+
+
+Introduction
+        Fantasy snake RPG game is a 2D snake-like with a twist game. Players will be moving in 2 dimensional using 4 directions. Players can use a keyboard or controller D-pad to move around when in game.
+* Repository url
+* Build location
+
+
+Game states
+        The game will be working in states using the same scene which are “Main Menu”, “Game state”, “Battle state” and “Game over state”. Each of the states will be managed by “GameStateManager” mainly using functions from “IState” which is the Interface that each state inherited from.
+
+
+Pool system
+        At the start of the game, the pool system will spawn each unit the same amount of each unity type’s pool size. Which can be picked up from and returned to the pool whenever needed.
+
+
+Board creation
+        The game will create an adjustable-size 2D board when the game. Which will be filled with “Obstacle”,”Hero” and “Monster”. No matter the board’s size, the “Board manager” will scale all the board units to fit within the screen.
+
+
+* “PresetBoardSpawnOnGameStart” 
+   * At the start of the game state,the board manager will use each unit’s spawn percentage and plot each unit on a random free board’s position. Start with the player's initial “Hero” unit which is the “Partyleader”. Follow with “Obstacle”, other “Hero” units and “Monster”
+   * After the unit position has been set the board will give each unit position data and set up its on-screen transform data.
+* Spawning percent
+   * To make sure that the player will be able to move on the board. The board will only spawn unit type amount according to spawn percentage that can be adjusted in the “GameTweaks”
+
+
+Unit system
+        Every unit that can be spawn in the board is inherited from “BaseBoardUnit”
+        Character unit will also inherit from “BaseCharacterUnit” which will allow them to be used in battle and move around the board.
+
+
+
+
+Movement
+        Using the New input system from Unity, Players can move around using a keyboard or controller. Whenever and wherever the player moves party leader, the player's party will follow and will update self position to board.
+* Each move will add random extra points to character units. The minimum and maximum of points for each unit can be adjusted in “GameTweaks”
+
+
+
+
+Collision system
+        Player’s party leader can collide with other units on the board which will be affected by being removed from the board if they collide with “Obstacle”. In case of colliding with “Monster”, the “Battle state” will be initiated.
+
+
+Battle system
+        “Battle state” will set up the data needed for battle and will let each participant attack each other at the same time.  After the first attack, the game will decide at random who will be able to do the next attack and switch between participants to attack each other until one of the participant Health points is reduced to 0. The participant whose health has been reduced to 0 will be removed from the board.
+* In case “Monster” got removed from the board. The board will spawn in monster to the board, the number of monsters that will spawn back when one “Monster” is removed can be adjusted in “GameTweak”.
+* In case “Party Leader” got removed from the board. The next in line player’s party will promote itself as the new “Party Leader”.
+
+
+Collectable
+        In case the player's party leader is colliding with another “Hero” unit that is not in the player's party, said “Hero” unit will be added to the player's party. The board will spawn in hero to the board, the number of heroes that will spawn back when one “Hero” is collected can be adjusted in “GameTweak”.
+
+
+Obstacle
+        In case the player’s party leader collided into an obstacle. The current party leader will be removed and will be replaced by the next in line hero in the player's party.
+
+
+Hero unit in party
+        In case the player’s party leader collides into any hero unit that is already in the player's party will render the game over.
+
+
+
+
+
+
+Game Over
+        The game will keep track of player’s moves, monster defeated amount and score. After the game is over, the game will allow the player to replay or go back to “MainMenu” If needed.
+
+
+Assets
+        The game uses assets
+* Buttons Set by Kartinnka
+* Miniature Army 2D V.1 by MiMU STUDIO
+
+
+
+
+
+
+See also,
+“Main Menu”                : MainMenuState.cs
+“Game state”                : GameState.cs
+“Battle state”                : BattleState.cs
+“Game over state”        : GameOverState.cs
+“GameStatemanager”        : GameStatemanager.cs
+“IState”                : IState.cs
+“Board manager”        : Boardmanager.cs
+“PresetBoardSpawnOnGameStart”        : PresetBoardSpawnOnGameStart function in Boardmanager.cs
+“Obstacle”                : Obstacle.cs
+“Hero”                        : Hero.cs
+“Monster”                : Monster.cs
+“Party Leader”                : Partyleader variable in Player.cs
+“BaseBoardUnit”        : BaseBoardUnit.cs
+“BaseCharacterUnit”        : BaseCharacterUnit.cs
+“GameTweak”                : GameTweaks scriptable object
