@@ -1,12 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public class GameOverState : BaseState
 {
     public override void Initialize()
     {
-        
     }
 
     protected override void OnStartState()
@@ -18,6 +13,5 @@ public class GameOverState : BaseState
     protected override void OnEndState()
     {
         GameManager.Instance.UI.GameOver.OnHidePopup();
-        
     }
 }

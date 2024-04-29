@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -27,7 +25,7 @@ public class Player : MonoBehaviour
         partyLeader = null;
     }
 
-    public void SetPartyLeader(Hero leader)
+    private void SetPartyLeader(Hero leader)
     {
         partyLeader = leader;
         partyLeader.SetHeroStatusColor(Globals.IsPartyLeaderColor);
@@ -67,20 +65,12 @@ public class Player : MonoBehaviour
                     playerParty.Remove(target);
                      partyLeader.MoveUnitToTargetPos(oldPartyLeaderPos);
                      MovePlayerPartySnake(tmpNewPartyLeaderPos,true);
-                     
-                     Debug.Log($"RemoveHeroFromParty oldPartyLeaderPos: {oldPartyLeaderPos} | tmpNewPartyLeaderPos: {tmpNewPartyLeaderPos}".InColor(new Color(1f, 0.93f, 0.56f)),partyLeader);
                 }
                 else
-                {
-                    Debug.Log($"Removing {target.name} from pos: {target.BoardPosition} from party".InColor(new Color(0.74f, 0.91f, 1f)),target);
                     playerParty.Remove(target);
-                }
             }
             else
-            {
-                Debug.Log($"Removing {target.name} from pos: {target.BoardPosition} from party".InColor(new Color(0.74f, 0.71f, 1f)),target);
                 playerParty.Remove(target);
-            }
         }
         
         if (playerParty.Count <= 0)
@@ -117,34 +107,14 @@ public class Player : MonoBehaviour
         var newPartyLeader = playerParty[playerParty.Count - 1];
         var newPartyLeaderPos = playerParty[playerParty.Count-1].BoardPosition;
         
-        //TODO: Set new Partyleader
         SetPartyLeader(newPartyLeader);
-        
-        //TODO: Set new partyLeader position with the old partyleader pos
         partyLeader.MoveUnitToTargetPos(oldPartyLeaderPos);
         
-        //TODO: Set old Partyleader
         oldPartyLeader.SetHeroStatusColor(Globals.IsInPartyColor);
-        
-        //TODO: Set old partyLeader position
         oldPartyLeader.MoveUnitToTargetPos(newPartyLeaderPos);
         
-        //TODO: Replace position in list
         playerParty[0] = partyLeader;
         playerParty[playerParty.Count-1] = oldPartyLeader;
-        
-         
-        
-        
-        // //TODO: Update new party leader pos
-        // partyLeader.IsSwitchingPartyLeader = true;
-        //
-        //
-        // //TODO: Update previous party leader pos
-        // oldPartyLeader.IsSwitchingPartyLeader = true;
-        //
-        // playerParty[0] = partyLeader;
-        // playerParty[playerParty.Count-1] = oldPartyLeader;
     }
 
     public bool IsInPlayerParty(Hero hero)
@@ -202,11 +172,8 @@ public class Player : MonoBehaviour
     {
         for (int i = 1; i < playerParty.Count; i++)
         {
-            //TODO: Need to give direction to other nodes
             if (playerParty[i].nodeToFollow == partyLeader)
-            {
                 followNodeDestination = tmpPartyLeaderPreviousBoardPos;
-            }
             else
                 followNodeDestination = playerParty[i - 1].PreviousPos;
             

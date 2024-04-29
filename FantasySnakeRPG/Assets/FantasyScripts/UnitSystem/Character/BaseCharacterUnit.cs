@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class BaseCharacterUnit : BaseBoardUnit,IMoveableUnit,ICharacter
@@ -48,7 +46,6 @@ public class BaseCharacterUnit : BaseBoardUnit,IMoveableUnit,ICharacter
 
     protected virtual void OnHealthGotReduced()
     {
-        
     }
 
     protected virtual bool OnMoveUnit(Vector2Int targetPos)

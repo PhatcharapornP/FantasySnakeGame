@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public static class Globals
@@ -17,8 +15,7 @@ public static class Globals
         BG = 0,
         Hero = 1,
         Monster = 2,
-        Obstacle = 3,
-        Ground = 4
+        Obstacle = 3
     }
     
     public static Color IsPartyLeaderColor = new Color(1f, 0.44f, 0.09f);

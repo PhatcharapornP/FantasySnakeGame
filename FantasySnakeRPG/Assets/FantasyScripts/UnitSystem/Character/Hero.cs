@@ -10,14 +10,9 @@ public class Hero : BaseCharacterUnit
     protected override void OnRemoveUnitFromBoard()
     {
         base.OnRemoveUnitFromBoard();
-        Debug.Log($"{GetType()} remove at: {BoardPosition}".InColor(Color.red),gameObject);
         SetHeroStatusColor(Globals.DefaultHeroColor);
         if (Player.Instance.IsInPlayerParty(this))
             Player.Instance.RemoveHeroFromParty(this);
-        else
-        {
-            //TODO: Need to spawn hero on random spot
-        }
         nodeToFollow = null;
         IsSwitchingPartyLeader = false;
     }
@@ -43,8 +38,6 @@ public class Hero : BaseCharacterUnit
     {
         base.OnHealthGotReduced();
         tmpHealthPercent = ((float)Health / (float)MaxHealth) * 100f;
-        Debug.Log($"hero: {this} tmpHealthPercent: {tmpHealthPercent} ".InColor(new Color(1f, 0.24f, 0.76f)),this);
         heroStatusGraphic.fillAmount = tmpHealthPercent / 100f;
-        Debug.Log($"------------------------Health: {Health} / MaxHealth: {MaxHealth} > | heroStatusGraphic.fillAmount: {heroStatusGraphic.fillAmount}-------------------".InColor(new Color(1f, 0.24f, 0.76f)),this);
     }
 }
