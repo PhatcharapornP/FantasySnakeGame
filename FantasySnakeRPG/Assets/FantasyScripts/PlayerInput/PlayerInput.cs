@@ -1,7 +1,5 @@
-using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.Interactions;
 
 public class PlayerInput : MonoBehaviour,GameInputAsset.IPlayerActions
 {
@@ -25,23 +23,12 @@ public class PlayerInput : MonoBehaviour,GameInputAsset.IPlayerActions
     public void OnSwitchHero(InputAction.CallbackContext context)
     {
         if (context.phase == InputActionPhase.Performed)
-        {
-            Debug.Log($"gimme switch hero".InColor(Color.magenta));   
             Player.Instance.SwitchSecondaryHeroToPartyLeader();
-        }
     }
 
     public void OnRotateHero(InputAction.CallbackContext context)
     {
         if (context.phase == InputActionPhase.Performed)
-        {
-         Debug.Log($"yoooooooo rotate pls".InColor(Color.cyan));
          Player.Instance.RotateLastHeroToPartyLeader();
-        }
-    }
-
-    private void Update()
-    {
-        
     }
 }

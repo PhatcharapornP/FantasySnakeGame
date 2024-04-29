@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CollisionController
@@ -10,7 +8,6 @@ public class CollisionController
         {
             case Globals.PoolType.Obstacle:
             {
-                Debug.Log($"------------>{target.BoardPosition} collide with obstacle at {theOtherUnit.BoardPosition}".InColor(Color.red));
                 GameManager.Instance.Board.CompletelyRemoveFromBoard((BaseBoardUnit)target);
                 return false;
             }
@@ -18,8 +15,6 @@ public class CollisionController
             {
                 if (Player.Instance.IsInPlayerParty((Hero)theOtherUnit) == false)
                 {
-                    //TODO: Means that it'll allow partyleader to replace this unit pos
-                    //TODO: And when partyleader moves. the party follows
                     Player.Instance.AddHeroToPlayerParty((Hero)theOtherUnit);
                     GameManager.Instance.Board.FillInRandomGroundWithNewHero();
                     return true;
@@ -31,16 +26,12 @@ public class CollisionController
                         GameManager.Instance.StateManager.GoToGameOverState();
                         return false;
                     }
-                    
                     return true;
-                    
                 }
             }
             case Globals.PoolType.Monster:
             {
-                //TODO: For debug
                 GameManager.Instance.StateManager.Battle.SetupBattleParticipant((Hero)target,(Monster)theOtherUnit);
-                
                 return false;
             }
             default: return false;
@@ -58,8 +49,6 @@ public class CollisionController
                 return true; //Tell unit that it collided with something
         }
         else
-        {
             return false; //Nothing in the way    
-        }
     }
 }

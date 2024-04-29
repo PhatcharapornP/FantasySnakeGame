@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public class Movecounter
 {
     private int move = 0;

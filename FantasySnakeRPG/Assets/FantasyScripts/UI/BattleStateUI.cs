@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class BattleStateUI : BaseUserInterface
@@ -14,6 +11,8 @@ public class BattleStateUI : BaseUserInterface
     [SerializeField] private Transform heroMsgContainer;
     [SerializeField] private Transform monsterMsgContainer;
     [SerializeField] private TextMeshProUGUI msgPrefab;
+    [SerializeField] private Animator heroAnimator;
+    [SerializeField] private Animator monsterAnimator;
     
     public override void Initialize()
     {
@@ -65,6 +64,16 @@ public class BattleStateUI : BaseUserInterface
     public void SetMonsterHealthBar(int value)
     {
         monsterHealthBar.value = value;
+    }
+
+    public void TriggerHeroAnimation(string key)
+    {
+        heroAnimator.SetTrigger(key);
+    }
+
+    public void TriggerMonsterAnimation(string key)
+    {
+        monsterAnimator.SetTrigger(key);
     }
 
 }

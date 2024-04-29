@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class MainMenuUI : BaseUserInterface
@@ -72,6 +69,7 @@ public class MainMenuUI : BaseUserInterface
 
     private void QuitToDesktop()
     {
+        GameManager.Instance.UpdatePlayerStatAndSave();
         GameManager.Instance.QuitToDesktop();
     }
 }

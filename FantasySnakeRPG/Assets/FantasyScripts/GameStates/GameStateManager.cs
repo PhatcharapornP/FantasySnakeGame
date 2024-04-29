@@ -9,9 +9,7 @@ public class GameStateManager : MonoBehaviour
     [SerializeField] private BattleState battleState;
     [SerializeField] private GameOverState gameOverState;
     public IState currentState { get; private set; }
-    [SerializeField] private Behaviour debugCurrentState;
     public BattleState Battle => battleState;
-    public GameState Game => gameState;
     public void Initialize()
     {
         mainMenuState.Initialize();
@@ -46,29 +44,25 @@ public class GameStateManager : MonoBehaviour
     public void GoToBattleState(UnityAction callback = null)
     {
         if (GameManager.Instance.UI.HudUI.IsPaused) return;
-        // if (currentState is GameState == false) return;
-        // if (currentState is BattleState) return;
         currentState = battleState;
         battleState.StartState();
     }
 
     public void OnBattleEnds()
     {
-        //if (GameManager.Instance.UI.HudUI.IsPaused) return;
-        Debug.Log($"OnBattleEnds {currentState}" .InColor(Color.red));
         if (currentState is BattleState == false) return;
-        
+        if (Player.Instance.partyLeader == null)
+        {
+            
+        }
         battleState.EndState();
         currentState = gameState;
-        Debug.Log($"OnBattleEnds {currentState}".InColor(Color.green));
     }
 
     public void GoToGameOverState(UnityAction callback = null)
     {
         if (currentState is GameOverState) return;
         EndCurrentState();
-        // if (currentState is BattleState)
-        //     battleState.EndState();
         currentState = gameOverState;
         currentState.StartState();
     }
@@ -90,28 +84,5 @@ public class GameStateManager : MonoBehaviour
         if (GameManager.Instance.UI.HudUI.IsPaused)
             GameManager.Instance.UI.HudUI.UnpauseGame();
         Player.Instance.ResetAllParty();
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyUp(KeyCode.F))
-        {
-            GoToBattleState();
-        }
-
-        if (Input.GetKeyUp(KeyCode.P))
-        {
-            OnBattleEnds();
-        }
-
-        if (Input.GetKeyUp(KeyCode.L))
-        {
-            if (Player.Instance && Player.Instance.HasPartyLeader)
-            {
-                GameManager.Instance.Board.CompletelyRemoveFromBoard(Player.Instance.partyLeader);
-            }
-        }
-
-        debugCurrentState = (Behaviour)currentState;
     }
 }

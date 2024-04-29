@@ -61,11 +61,6 @@ public abstract class BaseBoardUnit : MonoBehaviour,IBoardUnit
         GameobjPosition = targetPos;
     }
 
-    public void SetupUnitScale(Vector3 gameObjScale)
-    {
-        GameobjScale = gameObjScale;
-    }
-
     public void SetupUnitTrasnformOnScreen()
     {
        //TODO: set transform pos
