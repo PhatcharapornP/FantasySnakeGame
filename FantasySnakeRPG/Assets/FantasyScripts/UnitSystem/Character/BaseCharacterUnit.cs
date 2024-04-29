@@ -4,7 +4,7 @@ public class BaseCharacterUnit : BaseBoardUnit,IMoveableUnit,ICharacter
 {
     public Vector2Int CurrentPos { get; set; }
     public Vector2Int PreviousPos { get; set; }
-    public Vector2Int CurrentDirection { get; set; }
+    public Vector2Int CurrentDestination { get; set; }
     protected BaseBoardUnit contactedUnit;
     
     public int Health { get; set; }
@@ -44,8 +44,27 @@ public class BaseCharacterUnit : BaseBoardUnit,IMoveableUnit,ICharacter
         
     }
 
+    public void IncreaseHealthAmount(int amount)
+    {
+        Health += amount;
+        Health = Mathf.Clamp(Health, Health, MaxHealth);
+        OnHealthIncreased();
+    }
+
+    public void SetHealth(int amount)
+    {
+        Health += amount;
+        Health = Mathf.Clamp(Health, Health, MaxHealth);
+        OnHealthIncreased();
+    }
+
     protected virtual void OnHealthGotReduced()
     {
+    }
+
+    protected virtual void OnHealthIncreased()
+    {
+        
     }
 
     protected virtual bool OnMoveUnit(Vector2Int targetPos)

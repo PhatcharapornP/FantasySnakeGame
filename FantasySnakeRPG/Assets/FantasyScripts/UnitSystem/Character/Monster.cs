@@ -24,6 +24,17 @@ public class Monster : BaseCharacterUnit
     protected override void OnHealthGotReduced()
     {
         base.OnHealthGotReduced();
+        UpdateHealthStatusUI();
+    }
+
+    protected override void OnHealthIncreased()
+    {
+        base.OnHealthIncreased();
+        UpdateHealthStatusUI();
+    }
+
+    private void UpdateHealthStatusUI()
+    {
         tmpHealthPercent = ((float)Health / (float)MaxHealth) * 100f;
         heroStatusGraphic.fillAmount = tmpHealthPercent / 100;
     }

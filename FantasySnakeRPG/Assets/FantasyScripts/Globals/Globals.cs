@@ -10,6 +10,12 @@ public static class Globals
     public const string MoveMsg = "Moves";
     public const string MonsterDefeatMsg = "Monster defeated";
     
+    public const string ATKAnim = "Atk";
+    public const string HurtAnim = "Hurt";
+    public const string DieAnim = "Die";
+    public const string VictoryAnim = "Victory";
+    
+    
     public enum PoolType
     {
         BG = 0,
@@ -18,7 +24,7 @@ public static class Globals
         Obstacle = 3
     }
     
-    public static Color IsPartyLeaderColor = new Color(1f, 0.44f, 0.09f);
-    public static Color IsInPartyColor = new Color(0.85f, 1f, 0.47f);
-    public static Color DefaultHeroColor = new Color(0.41f, 0.64f, 1f);
+    public static Color IsPartyLeaderColor = new Color(1f, 0.38f, 0f);
+    public static Color IsInPartyColor = new Color(0.2f, 1f, 0.1f);
+    public static Color DefaultHeroColor = new Color(0.91f, 0.98f, 1f);
 }

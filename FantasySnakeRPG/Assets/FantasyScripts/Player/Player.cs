@@ -30,6 +30,11 @@ public class Player : MonoBehaviour
         partyLeader = leader;
         partyLeader.SetHeroStatusColor(Globals.IsPartyLeaderColor);
     }
+
+    public void PickNewPartyLeaderOnNull()
+    {
+        
+    }
     
     public void AddHeroToPlayerParty(Hero target)
     {
@@ -59,12 +64,30 @@ public class Player : MonoBehaviour
                 if (playerParty.Count > 1)
                 {
                    var oldPartyLeaderPos = partyLeader.BoardPosition;
+                   var currentDest = partyLeader.CurrentDestination;
                     var tmpPartyLeader = playerParty[1];
                     var tmpNewPartyLeaderPos = playerParty[1].BoardPosition;
                     SetPartyLeader(tmpPartyLeader);
                     playerParty.Remove(target);
-                     partyLeader.MoveUnitToTargetPos(oldPartyLeaderPos);
-                     MovePlayerPartySnake(tmpNewPartyLeaderPos,true);
+
+                    var tmp = GameManager.Instance.Board.GetBoardUnitFromPos(currentDest); 
+                    if (tmp == null)
+                        partyLeader.MoveUnitToTargetPos(currentDest);
+                    else
+                    {
+                        if (tmp is Monster)
+                        {
+                            var monster = (Monster)tmp;
+                            if (monster.Health <= 0) //This will happen when both hero and monster died in the same battle
+                                partyLeader.MoveUnitToTargetPos(currentDest);
+                            else
+                                partyLeader.MoveUnitToTargetPos(oldPartyLeaderPos);
+                        }
+                        else
+                            partyLeader.MoveUnitToTargetPos(oldPartyLeaderPos);
+                    }
+                    if (oldPartyLeaderPos != tmpNewPartyLeaderPos)
+                        MovePlayerPartySnake(tmpNewPartyLeaderPos,true);
                 }
                 else
                     playerParty.Remove(target);
@@ -160,12 +183,19 @@ public class Player : MonoBehaviour
         rejectingInput = false;
         
         //TODO: Move the entire party
-        partyLeader.CurrentDirection = direction;
+        partyLeader.CurrentDestination = targetPos;
         previousDirection = direction;
         GameManager.Instance.MoveCounter.IncreaseMoveCounter();
         GameManager.Instance.UI.Game.SetMoveText($"{Globals.MoveMsg}: {GameManager.Instance.MoveCounter.GetCurrentMoveAmount()}");
+        
+        GameManager.Instance.Board.IncreaseHeroStatPerMove();
+        GameManager.Instance.Board.IncreaseMonsterStatPerMove();
+
+
         if (partyLeader.MoveUnit(targetPos))
+        {
             MovePlayerPartySnake(tmpPartyLeaderPreviousBoardPos);
+        }
     }
 
     public void MovePlayerPartySnake(Vector2Int tmpPartyLeaderPreviousBoardPos,bool byPassColliding = false)

@@ -45,10 +45,14 @@ public class GameTweaks : ScriptableObject
     [Header("Hero Stat Growth")]
     public int MinHeroHealthPerMove = 1;
     public int MaxHeroHealthPerMove = 5;
+    public int MinHeroAttackPerMove = 1;
+    public int MaxHeroAttackPerMove = 5;
     
     [Header("Monster Stat Growth")]
     public int MinMonsterHealthPerMove = 1;
     public int MaxMonsterHealthPerMove = 5;
+    public int MinMonsterAttackPerMove = 1;
+    public int MaxMonsterAttackPerMove = 5;
 
     [Header("Defeat score")]
     [Range(1.1f,5)]

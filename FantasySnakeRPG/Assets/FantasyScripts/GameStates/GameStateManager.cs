@@ -9,7 +9,6 @@ public class GameStateManager : MonoBehaviour
     [SerializeField] private BattleState battleState;
     [SerializeField] private GameOverState gameOverState;
     public IState currentState { get; private set; }
-    [SerializeField] private Behaviour debugCurrentState;
     public BattleState Battle => battleState;
     public void Initialize()
     {
@@ -52,6 +51,10 @@ public class GameStateManager : MonoBehaviour
     public void OnBattleEnds()
     {
         if (currentState is BattleState == false) return;
+        if (Player.Instance.partyLeader == null)
+        {
+            
+        }
         battleState.EndState();
         currentState = gameState;
     }
@@ -81,22 +84,5 @@ public class GameStateManager : MonoBehaviour
         if (GameManager.Instance.UI.HudUI.IsPaused)
             GameManager.Instance.UI.HudUI.UnpauseGame();
         Player.Instance.ResetAllParty();
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyUp(KeyCode.F))
-            GoToBattleState();
-
-        if (Input.GetKeyUp(KeyCode.P))
-            OnBattleEnds();
-
-        if (Input.GetKeyUp(KeyCode.L))
-        {
-            if (Player.Instance && Player.Instance.HasPartyLeader)
-                GameManager.Instance.Board.CompletelyRemoveFromBoard(Player.Instance.partyLeader);
-        }
-
-        debugCurrentState = (Behaviour)currentState;
     }
 }

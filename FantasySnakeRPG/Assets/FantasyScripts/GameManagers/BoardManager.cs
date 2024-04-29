@@ -13,8 +13,8 @@ public class BoardManager : MonoBehaviour
     [SerializeField] private float spacing = 1f;
     [SerializeField] private float widthDiff;
     [SerializeField] private float heightDiff;
-    [SerializeField] private List<BaseBoardUnit> spawnedHero = new List<BaseBoardUnit>();
-    [SerializeField] private List<BaseBoardUnit> spawnedMonster = new List<BaseBoardUnit>();
+    [SerializeField] private List<Hero> spawnedHero = new List<Hero>();
+    [SerializeField] private List<Monster> spawnedMonster = new List<Monster>();
     [SerializeField] private List<ObstacleSpawnData> spawnObstacle = new List<ObstacleSpawnData>();
     [SerializeField] private List<BaseBoardUnit> spawnedBG = new List<BaseBoardUnit>();
     [SerializeField] private Vector2Int obstacleSpec;
@@ -218,10 +218,54 @@ public class BoardManager : MonoBehaviour
         return true;
     }
 
+    public void IncreaseHeroStatPerMove()
+    {
+        int monsterMaxHealth = 0;
+        foreach (var monster in spawnedMonster)
+        {
+            if (monster.MaxHealth > monsterMaxHealth)
+                monsterMaxHealth = monster.MaxHealth;
+        }
+        foreach (var hero in spawnedHero)
+        {
+            if (hero.MaxHealth != hero.Health)
+            {
+                hero.MaxHealth += Random.Range(GameManager.Instance.Tweaks.MinHeroHealthPerMove,GameManager.Instance.Tweaks.MaxHeroHealthPerMove +1);
+                hero.IncreaseHealthAmount(Random.Range(GameManager.Instance.Tweaks.MinHeroHealthPerMove,GameManager.Instance.Tweaks.MaxHeroHealthPerMove +1));    
+            }
+            
+            hero.Attack += Random.Range(GameManager.Instance.Tweaks.MinHeroAttackPerMove,GameManager.Instance.Tweaks.MaxHeroAttackPerMove +1);
+            if (hero.Attack > monsterMaxHealth)
+                hero.Attack = monsterMaxHealth;
+        }
+    }
+
+    public void IncreaseMonsterStatPerMove()
+    {
+        int heroMaxHealth = 0;
+        foreach (var hero in spawnedHero)
+        {
+            if (hero.MaxHealth > heroMaxHealth)
+                heroMaxHealth = hero.MaxHealth;
+        }
+        foreach (var monster in spawnedMonster)
+        {
+            if (monster.MaxHealth != monster.Health)
+            {
+                monster.MaxHealth += Random.Range(GameManager.Instance.Tweaks.MinMonsterHealthPerMove,GameManager.Instance.Tweaks.MaxMonsterHealthPerMove +1);
+                monster.IncreaseHealthAmount(Random.Range(GameManager.Instance.Tweaks.MinMonsterHealthPerMove,GameManager.Instance.Tweaks.MaxMonsterHealthPerMove +1));    
+            }
+            
+            monster.Attack += Random.Range(GameManager.Instance.Tweaks.MinMonsterAttackPerMove,GameManager.Instance.Tweaks.MaxMonsterAttackPerMove +1);
+            if (monster.Attack > heroMaxHealth)
+                monster.Attack = heroMaxHealth;
+        }
+    }
+
     #region SpawnFunctions
     private int SpawnFirstPartyLeader()
     {
-        var partyLeader = GameManager.Instance.Pool.PickFromPool(Globals.PoolType.Hero);
+        var partyLeader = (Hero)GameManager.Instance.Pool.PickFromPool(Globals.PoolType.Hero);
 
         if (partyLeader.transform.parent != playerUnitParent)
             partyLeader.transform.SetParent(playerUnitParent);
@@ -337,7 +381,7 @@ public class BoardManager : MonoBehaviour
         switch (unit.UnitType)
         {
             case Globals.PoolType.Hero:
-                spawnedHero.Remove(unit);
+                spawnedHero.Remove((Hero)unit);
                 if (spawnedHero.Count < 5)
                     FillInRandomGroundWithNewHero();
                 break;
