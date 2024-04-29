@@ -25,6 +25,7 @@ public class Hero : BaseCharacterUnit
         MaxHealth = Random.Range(GameManager.Instance.Tweaks.MinHeroHealth,GameManager.Instance.Tweaks.MaxHeroHealth + 1);
         Health = MaxHealth;
         Attack = Random.Range(GameManager.Instance.Tweaks.MinHeroAttack,GameManager.Instance.Tweaks.MaxHeroAttack + 1);
+        UpdateHealthStatusUI();
     }
     
     public void SetHeroStatusColor(Color targetColor)

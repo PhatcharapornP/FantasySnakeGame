@@ -7,8 +7,7 @@ public class BattleState : BaseState
 {
     [SerializeField] private BaseCharacterUnit currentHero;
     [SerializeField] private BaseCharacterUnit currentMonster;
-    
-    public bool AllowNewLeaderPassOnBattleEnds { get; private set; }
+    private Vector2Int currentMonsterPos;
     
     public override void Initialize()
     {
@@ -39,6 +38,9 @@ public class BattleState : BaseState
     private int attackRNG;
     private void StartBattle()
     {
+        currentMonsterPos = currentMonster.BoardPosition;
+        GameManager.Instance.UI.Battle.SetHeroHealthBar(currentHero.Health);
+        GameManager.Instance.UI.Battle.SetMonsterHealthBar(currentMonster.Health);
         attackRNG= Random.Range(0, 2);
         StartCoroutine(AttackOpponent(currentHero, currentMonster, () =>
         {
@@ -49,6 +51,7 @@ public class BattleState : BaseState
 
     private IEnumerator AttackOpponent(BaseCharacterUnit hero ,BaseCharacterUnit monster,UnityAction callback)
     {
+        yield return new WaitForSeconds(.5f);
         GameManager.Instance.UI.Battle.TriggerMonsterAnimation(Globals.ATKAnim);
         GameManager.Instance.UI.Battle.TriggerHeroAnimation(Globals.ATKAnim);
         currentHero.ReduceHealth(currentMonster.Attack);
@@ -83,6 +86,29 @@ public class BattleState : BaseState
             
             yield return new WaitForSeconds(1.5f);
         }
+        
+        
+        if (!currentMonster.IsAlive)
+        {
+            GameManager.Instance.UI.Battle.AddMonsterActionMsg($"Monster defeated");
+            GameManager.Instance.UI.Battle.TriggerMonsterAnimation(Globals.DieAnim);
+            GameManager.Instance.Board.CompletelyRemoveFromBoard(currentMonster);
+            currentHero.MoveUnit(currentMonsterPos);
+            Player.Instance.MovePlayerPartySnake(true);
+            GameManager.Instance.Board.FillInRandomGroundWithNewMonster();
+            GameManager.Instance.MonsterCounter.IncreaseMonsterCounter();
+            GameManager.Instance.PlayerScore.AddScore(Mathf.CeilToInt(5*GameManager.Instance.Tweaks.monsterDefeatScoreMultiplier));
+            
+            GameManager.Instance.UI.Game.SetMonsterDefeatedText($"{Globals.MonsterDefeatMsg}: {GameManager.Instance.MonsterCounter.GetCurrentMonsterAmount()}");
+            GameManager.Instance.UI.Game.SetScoreText($"{Globals.HighScoreMsg}: {GameManager.Instance.PlayerScore.GetCurrentScore()}");
+        }
+        else
+        {
+            GameManager.Instance.UI.Battle.AddMonsterActionMsg($"Monster health remain: {monster.Health}");
+            GameManager.Instance.UI.Battle.TriggerMonsterAnimation(Globals.VictoryAnim);
+        }
+        
+        yield return new WaitForSeconds(.5f);
 
         if (!currentHero.IsAlive)
         {
@@ -96,49 +122,12 @@ public class BattleState : BaseState
             GameManager.Instance.UI.Battle.TriggerHeroAnimation(Globals.VictoryAnim);
         }
         
-        if (!currentMonster.IsAlive)
-        {
-            GameManager.Instance.UI.Battle.AddMonsterActionMsg($"Monster defeated");
-            GameManager.Instance.UI.Battle.TriggerMonsterAnimation(Globals.DieAnim);
-            GameManager.Instance.Board.CompletelyRemoveFromBoard(currentMonster);
-            var tmpPos = currentHero.BoardPosition;
-            currentHero.MoveUnit(currentMonster.BoardPosition);
-            Player.Instance.MovePlayerPartySnake(tmpPos,true);
-            GameManager.Instance.Board.FillInRandomGroundWithNewMonster();
-            GameManager.Instance.MonsterCounter.IncreaseMonsterCounter();
-            GameManager.Instance.PlayerScore.AddScore(Mathf.CeilToInt(5*GameManager.Instance.Tweaks.monsterDefeatScoreMultiplier));
-            
-            GameManager.Instance.UI.Game.SetMonsterDefeatedText($"{Globals.MonsterDefeatMsg}: {GameManager.Instance.MonsterCounter.GetCurrentMonsterAmount()}");
-            GameManager.Instance.UI.Game.SetScoreText($"{Globals.HighScoreMsg}: {GameManager.Instance.PlayerScore.GetCurrentScore()}");
-        }
-        else
-        {
-            GameManager.Instance.UI.Battle.AddMonsterActionMsg($"Monster health remain: {monster.Health}");
-            GameManager.Instance.UI.Battle.TriggerMonsterAnimation(Globals.VictoryAnim);
-        }
-
-        if (!currentHero.IsAlive && !currentMonster.IsAlive)
-            AllowNewLeaderPassOnBattleEnds = true;
         
+
         yield return new WaitForSeconds(1.5f);
         
         GameManager.Instance.StateManager.OnBattleEnds();
 
         yield return null;
-    }
-
-    public bool IsAllowNewLeaderPassOnBattleEnds()
-    {
-        if (AllowNewLeaderPassOnBattleEnds)
-        {
-            AllowNewLeaderPassOnBattleEnds = false;
-            return true;    
-        }
-        else
-        {
-            return false;
-        }
-        
-        
     }
 }

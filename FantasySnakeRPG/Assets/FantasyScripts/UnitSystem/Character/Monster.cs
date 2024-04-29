@@ -16,6 +16,7 @@ public class Monster : BaseCharacterUnit
         MaxHealth = Random.Range(GameManager.Instance.Tweaks.MinMonsterHealth,GameManager.Instance.Tweaks.MaxMonsterHealth + 1);
         Health = MaxHealth;
         Attack = Random.Range(GameManager.Instance.Tweaks.MinMonsterAttack,GameManager.Instance.Tweaks.MaxMonsterAttack + 1);
+        UpdateHealthStatusUI();
     }
     
     private float tmpHealthPercent = 0;

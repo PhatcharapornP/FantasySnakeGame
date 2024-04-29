@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class Player : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class Player : MonoBehaviour
     [SerializeField] private Vector2Int previousDirection;
     [SerializeField] private Vector2Int targetPos;
     [SerializeField] private List<Hero> playerParty = new List<Hero>();
+    [FormerlySerializedAs("partyPreviousPoses")] [FormerlySerializedAs("partPreviousPoses")] [SerializeField] private List<Vector2Int> currentPartyPoses = new List<Vector2Int>();
     [SerializeField] private bool rejectingInput = false;
 
     private void Awake()
@@ -22,6 +24,7 @@ public class Player : MonoBehaviour
         previousDirection = Vector2Int.zero;
         targetPos = Vector2Int.zero;
         playerParty.Clear();
+        currentPartyPoses.Clear();
         partyLeader = null;
     }
 
@@ -29,11 +32,6 @@ public class Player : MonoBehaviour
     {
         partyLeader = leader;
         partyLeader.SetHeroStatusColor(Globals.IsPartyLeaderColor);
-    }
-
-    public void PickNewPartyLeaderOnNull()
-    {
-        
     }
     
     public void AddHeroToPlayerParty(Hero target)
@@ -66,28 +64,24 @@ public class Player : MonoBehaviour
                    var oldPartyLeaderPos = partyLeader.BoardPosition;
                    var currentDest = partyLeader.CurrentDestination;
                     var tmpPartyLeader = playerParty[1];
-                    var tmpNewPartyLeaderPos = playerParty[1].BoardPosition;
                     SetPartyLeader(tmpPartyLeader);
+                    UpdateCurrentPartyPoses();
                     playerParty.Remove(target);
 
-                    var tmp = GameManager.Instance.Board.GetBoardUnitFromPos(currentDest); 
-                    if (tmp == null)
+                    var unit = GameManager.Instance.Board.GetBoardUnitFromPos(currentDest);
+                    if (unit == null)
+                    {
                         partyLeader.MoveUnitToTargetPos(currentDest);
+                        //Party follow new previous pos
+                        OverwritePartyPreviousPoses();
+                        MovePlayerPartySnake(true);
+                    }
                     else
                     {
-                        if (tmp is Monster)
-                        {
-                            var monster = (Monster)tmp;
-                            if (monster.Health <= 0) //This will happen when both hero and monster died in the same battle
-                                partyLeader.MoveUnitToTargetPos(currentDest);
-                            else
-                                partyLeader.MoveUnitToTargetPos(oldPartyLeaderPos);
-                        }
-                        else
-                            partyLeader.MoveUnitToTargetPos(oldPartyLeaderPos);
+                        //Normal follows
+                        partyLeader.MoveUnitToTargetPos(oldPartyLeaderPos);
+                        MovePlayerPartySnake(true);
                     }
-                    if (oldPartyLeaderPos != tmpNewPartyLeaderPos)
-                        MovePlayerPartySnake(tmpNewPartyLeaderPos,true);
                 }
                 else
                     playerParty.Remove(target);
@@ -95,6 +89,8 @@ public class Player : MonoBehaviour
             else
                 playerParty.Remove(target);
         }
+        
+        currentPartyPoses.Clear();
         
         if (playerParty.Count <= 0)
             GameManager.Instance.StateManager.GoToGameOverState();
@@ -119,6 +115,7 @@ public class Player : MonoBehaviour
         playerParty[0] = partyLeader;
         playerParty[1] = previousPartyLeader;
         previousPartyLeader.SetHeroStatusColor(Globals.IsInPartyColor);
+        RefreshNodeToFollows();
     }
 
     public void RotateLastHeroToPartyLeader()
@@ -138,6 +135,31 @@ public class Player : MonoBehaviour
         
         playerParty[0] = partyLeader;
         playerParty[playerParty.Count-1] = oldPartyLeader;
+        RefreshNodeToFollows();
+    }
+
+    private void RefreshNodeToFollows()
+    {
+        for (int i = 1; i < playerParty.Count; i++)
+        {
+            playerParty[i].nodeToFollow = playerParty[i - 1];
+        }
+    }
+
+    private void UpdateCurrentPartyPoses()
+    {
+        for (int i = 0; i < playerParty.Count; i++)
+        {
+            currentPartyPoses.Add(playerParty[i].BoardPosition);
+        }
+    }
+
+    private void OverwritePartyPreviousPoses()
+    {
+        for (int i = 0; i < playerParty.Count; i++)
+        {
+            playerParty[i].PreviousPos = currentPartyPoses[i];
+        }
     }
 
     public bool IsInPlayerParty(Hero hero)
@@ -161,10 +183,10 @@ public class Player : MonoBehaviour
         if (direction.x != 0 && direction.y != 0) return; //Reject when both direction is being pressed
         if (direction.x == 0 && direction.y == 0) return; //Reject if both direction doesn't have value
 
-        if (previousDirection.x == 1 && direction.x == -1) return; //Reject moving opposite side
+        if (previousDirection.x == 1 && direction.x == -1) return; //Reject moving opposite side X
         if (previousDirection.x == -1 && direction.x == 1) return;
 
-        if (previousDirection.y == 1 && direction.y == -1) return; //Reject moving opposide side
+        if (previousDirection.y == 1 && direction.y == -1) return; //Reject moving opposide side Y
         if (previousDirection.y == -1 && direction.y == 1) return;
 
         targetPos = partyLeader.BoardPosition;
@@ -182,7 +204,6 @@ public class Player : MonoBehaviour
         
         rejectingInput = false;
         
-        //TODO: Move the entire party
         partyLeader.CurrentDestination = targetPos;
         previousDirection = direction;
         GameManager.Instance.MoveCounter.IncreaseMoveCounter();
@@ -191,21 +212,15 @@ public class Player : MonoBehaviour
         GameManager.Instance.Board.IncreaseHeroStatPerMove();
         GameManager.Instance.Board.IncreaseMonsterStatPerMove();
 
-
         if (partyLeader.MoveUnit(targetPos))
-        {
-            MovePlayerPartySnake(tmpPartyLeaderPreviousBoardPos);
-        }
+            MovePlayerPartySnake();
     }
 
-    public void MovePlayerPartySnake(Vector2Int tmpPartyLeaderPreviousBoardPos,bool byPassColliding = false)
+    public void MovePlayerPartySnake(bool byPassColliding = false)
     {
         for (int i = 1; i < playerParty.Count; i++)
         {
-            if (playerParty[i].nodeToFollow == partyLeader)
-                followNodeDestination = tmpPartyLeaderPreviousBoardPos;
-            else
-                followNodeDestination = playerParty[i - 1].PreviousPos;
+            followNodeDestination = playerParty[i - 1].PreviousPos;
             
             if (!byPassColliding)
                 playerParty[i].MoveUnit(followNodeDestination);
